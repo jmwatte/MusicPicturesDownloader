@@ -1,7 +1,57 @@
 
 <#
 .SYNOPSIS
-Public wrapper to find and save an album cover from Q.
+Finds and saves an album cover from Qobuz for a given album and artist.
+
+.DESCRIPTION
+Searches Qobuz for the specified album and artist, scores candidates, and downloads the best match according to the specified options. Supports automatic download, candidate reporting, file naming, and download mode control.
+
+.PARAMETER Album
+The album name to search for. Mandatory.
+
+.PARAMETER Artist
+The artist name to search for. Mandatory.
+
+.PARAMETER DestinationFolder
+The folder where the album cover will be saved. Mandatory.
+
+.PARAMETER Size
+Preferred image size: 230, 600, or max. Default is 230.
+
+.PARAMETER DownloadMode
+Controls download behavior: Always (overwrite), IfBigger (only if remote image is larger), SkipIfExists (skip if file exists). Default is Always.
+
+.PARAMETER FileNameStyle
+Controls file naming: Folder (folder.jpg), Cover (cover.jpg), Album-Artist, Artist-Album, or Custom (use CustomFileName). Default is Cover.
+
+.PARAMETER CustomFileName
+Custom file name format string (use {Album} and {Artist} as placeholders). Used if FileNameStyle is Custom.
+
+.PARAMETER Auto
+If set, automatically downloads the best candidate if its score meets the threshold.
+
+.PARAMETER Threshold
+Minimum score required for auto-download. Default is 0.75.
+
+.PARAMETER GenerateReport
+If set, generates a JSON report of all candidates and their scores.
+
+.PARAMETER MaxCandidates
+Maximum number of candidates to consider. Default is 10.
+
+.OUTPUTS
+If -Auto is used and a cover is downloaded: outputs the local file path. If a report is generated, also outputs the report file path.
+If -Auto is not used: outputs an array of scored candidate objects. If a report is generated, also outputs the report file path.
+If no candidates are found: outputs $null (and report path if generated).
+
+.EXAMPLE
+Save-QAlbumCover -Album "Back in Black" -Artist "AC/DC" -DestinationFolder "C:\Covers" -Auto -Verbose
+
+.EXAMPLE
+Save-QAlbumCover -Album "Thriller" -Artist "Michael Jackson" -DestinationFolder "C:\Covers" -GenerateReport -FileNameStyle Album-Artist
+
+.NOTES
+Requires PowerHTML module for HTML parsing.
 #>
 function Save-QAlbumCover {
     [CmdletBinding()]
@@ -14,27 +64,33 @@ function Save-QAlbumCover {
     [string]$DestinationFolder,
     [ValidateSet('230','600','max')]
     [string]$Size = '230',
+    [ValidateSet('Always','IfBigger','SkipIfExists')]
+    [string]$DownloadMode = 'Always',
+    [ValidateSet('Folder','Cover','Album-Artist','Artist-Album','Custom')]
+    [string]$FileNameStyle = 'Cover',
+    [string]$CustomFileName,
     [switch]$Auto,
     [double]$Threshold = 0.75,
-    [switch]$GenerateReport
+    [switch]$GenerateReport,
+    [int]$MaxCandidates = 10
     )
 
     process {
     $url = Build-QSearchUrl -Album $Album -Artist $Artist
-        Write-Verbose "[Save-QAlbumCover] Searching: $url"
+    Write-Verbose "[Save-QAlbumCover] Searching: $url"
 
-        $html = Get-QSearchHtml -Url $url
-        Write-Verbose ("[Save-QAlbumCover] HTML length: {0}" -f ($html.Length))
+    $html = Get-QSearchHtml -Url $url
+    Write-Verbose ("[Save-QAlbumCover] HTML length: {0}" -f ($html.Length))
 
-        $candidates = Parse-QSearchResults -HtmlContent $html
-        Write-Verbose ("[Save-QAlbumCover] Candidates found: {0}" -f ($candidates.Count))
-        if ($candidates.Count -gt 0) {
-            $i = 0
-            foreach ($c in $candidates) {
-                Write-Verbose ("[Save-QAlbumCover] Candidate[{0}]: Title={1}, ImageUrl={2}" -f $i, $c.TitleAttr, $c.ImageUrl)
-                $i++
-            }
+    $candidates = Parse-QSearchResults -HtmlContent $html -MaxCandidates $MaxCandidates
+    Write-Verbose ("[Save-QAlbumCover] Candidates found: {0}" -f ($candidates.Count))
+    if ($candidates.Count -gt 0) {
+        $i = 0
+        foreach ($c in $candidates) {
+            Write-Verbose ("[Save-QAlbumCover] Candidate[{0}]: Title={1}, ImageUrl={2}" -f $i, $c.TitleAttr, $c.ImageUrl)
+            $i++
         }
+    }
 
         $scored = foreach ($c in $candidates) { Get-MatchQResult -Album $Album -Artist $Artist -Candidate $c }
         $scored = $scored | Sort-Object -Property Score -Descending
@@ -70,7 +126,7 @@ function Save-QAlbumCover {
                 $imgUrl = $imgUrl -replace '_max\.jpg$', ('_{0}.jpg' -f $Size)
             }
             Write-Verbose ("[Save-QAlbumCover] Auto mode: Downloading best candidate with score {0} and url {1}" -f $scored[0].Score, $imgUrl)
-            $local = Download-Image -ImageUrl $imgUrl -DestinationFolder $DestinationFolder
+            $local = Download-Image -ImageUrl $imgUrl -DestinationFolder $DestinationFolder -DownloadMode $DownloadMode -FileNameStyle $FileNameStyle -CustomFileName $CustomFileName -Album $Album -Artist $Artist
             $autoDownloaded = $true
         }
 

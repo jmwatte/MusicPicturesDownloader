@@ -6,7 +6,8 @@ function Parse-QSearchResults {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [string]$HtmlContent
+        [string]$HtmlContent,
+        [int]$MaxCandidates = 10
     )
 
     process {
@@ -22,6 +23,7 @@ function Parse-QSearchResults {
         # XPath for album candidates: all li nodes under the album search results section
         $albumNodes = $docNode.SelectNodes('//*[@id="search"]/section[2]/div/ul/li')
         foreach ($li in $albumNodes) {
+            if ($MaxCandidates -gt 0 -and $results.Count -ge $MaxCandidates) { break }
             # Image node: usually under div/img or div/div[1]/img
             $imgNode = $li.SelectSingleNode('.//img')
             $aNode = $li.SelectSingleNode('.//div[1]/a')

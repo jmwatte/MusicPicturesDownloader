@@ -10,7 +10,7 @@ Download artist images in bulk from Qobuz.
 .PARAMETER Input
 Artist name(s) as string or pipeline input. Accepts property names `ArtistName` or `InputObject`.
 
-.PARAMETER DestinationPath
+.PARAMETER DestinationFolder
 Directory to save downloaded images.
 
 .PARAMETER FileNameStyle
@@ -34,7 +34,7 @@ function Save-QobuzItems {
 
         [Parameter(Mandatory=$true, Position=1)]
         [ValidateNotNullOrEmpty()]
-        [string]$DestinationPath,
+        [string]$DestinationFolder,
 
     [ValidateSet('Hyphen','Spaces')]
     [string]$FileNameStyle = 'Hyphen',
@@ -47,11 +47,11 @@ function Save-QobuzItems {
 
 
     Begin {
-        #also test if the $DestinationPath is in the $ArtistInput
-        if ($ArtistInput -contains $DestinationPath) {
-            Write-Log -Message "DestinationPath is in the input" -Level Debug -Category Bulk
+        #also test if the $DestinationFolder is in the $ArtistInput
+        if ($ArtistInput -contains $DestinationFolder) {
+            Write-Log -Message "DestinationFolder is in the input" -Level Debug -Category Bulk
         }
-        if (-not (Test-Path -Path $DestinationPath)) { New-Item -Path $DestinationPath -ItemType Directory -Force | Out-Null }
+        if (-not (Test-Path -Path $DestinationFolder)) { New-Item -Path $DestinationFolder -ItemType Directory -Force | Out-Null }
         Write-Log -Message "Bulk operation begin" -Level Debug -Category Bulk
         $results = @()
     }
@@ -62,10 +62,10 @@ function Save-QobuzItems {
             foreach ($item in $ArtistInput) {
                 $artist = $item.ToString()
                 try {
-                    $artistImageParameters = @{ ArtistName = $artist; DestinationPath = $DestinationPath; FileNameStyle = $FileNameStyle; PreferredSize = $PreferredSize; ErrorAction = 'Stop' }
+                    $artistImageParameters = @{ ArtistName = $artist; DestinationFolder = $DestinationFolder; FileNameStyle = $FileNameStyle; PreferredSize = $PreferredSize; ErrorAction = 'Stop' }
                     if ($Force) { $artistImageParameters.Force = $true }
 
-                    if ($PSCmdlet.ShouldProcess($artist, "Download image to $DestinationPath")) {
+                    if ($PSCmdlet.ShouldProcess($artist, "Download image to $DestinationFolder")) {
                         Write-Log -Message "Processing item: $artist" -Level Verbose -Category Bulk
                         $out = Save-QobuzArtistImage @artistImageParameters
                         $results += [PSCustomObject]@{ Artist = $artist; Path = $out; Status = 'Success'; ErrorMessage = $null }

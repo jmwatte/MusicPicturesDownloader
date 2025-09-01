@@ -3,11 +3,9 @@
 Downloads and saves artist images for the specified artist(s).
 
 .DESCRIPTION
-Save-QArtistsImages accepts artist names or objects (with ArtistName or Name properties) from the pipeline
-or as direct arguments and delegates to Save-QobuzItems to download images. Supports PreferredSize and Force
-and respects common parameters like -WhatIf and -Confirm.
+Accepts artist names or objects (with ArtistName or Name properties) from the pipeline or as direct arguments and delegates to Save-QobuzItems to download images. Supports preferred size, force overwrite, and common parameters like -WhatIf and -Confirm.
 
-.PARAMETER Input
+.PARAMETER ArtistInput
 Artist(s) to obtain images for. Accepts:
 - string values (artist names) from the pipeline or as arguments.
 - objects from the pipeline that contain an ArtistName or Name property.
@@ -26,23 +24,19 @@ Switch to overwrite existing files when applicable.
 string, PSCustomObject
 
 .OUTPUTS
-None. The function delegates operations to Save-QobuzItems.
+None by default. Underlying Save-QobuzItems returns an array of objects with Artist, Path, Status, and ErrorMessage for each artist processed.
 
 .EXAMPLE
-# Positional use (artist name and destination)
 Save-QArtistsImages 'Pink Floyd' 'C:\Music\ArtistImages'
 
 .EXAMPLE
-# Pipeline of strings
 'Adele','Coldplay' | Save-QArtistsImages -DestinationPath 'C:\Music\ArtistImages'
 
 .EXAMPLE
-# Pipeline of objects with ArtistName or Name property
 [pscustomobject]@{ ArtistName = 'Radiohead' }, [pscustomobject]@{ Name = 'Nirvana' } |
     Save-QArtistsImages -DestinationPath 'C:\Music\ArtistImages' -PreferredSize medium
 
 .EXAMPLE
-# Use Force and common parameters like -WhatIf
 'The Beatles' | Save-QArtistsImages -DestinationPath 'C:\Music\ArtistImages' -Force -WhatIf
 
 .NOTES
@@ -53,11 +47,11 @@ function Save-QArtistsImages {
     param(
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [Alias('InputObject')]
-        [object[]]$Input,
+        [object[]]$ArtistInput,
 
         [Parameter(Mandatory=$true, Position=1)]
         [ValidateNotNullOrEmpty()]
-        [string]$DestinationPath,
+        [string]$DestinationFolder,
 
         [Parameter()]
         [ValidateSet('large','medium','small')]
@@ -67,12 +61,12 @@ function Save-QArtistsImages {
         [switch]$Force
     )
     process {
-        $splat = @{ DestinationPath = $DestinationPath; PreferredSize = $PreferredSize }
+        $splat = @{ DestinationFolder = $DestinationFolder; PreferredSize = $PreferredSize }
         if ($PSBoundParameters.ContainsKey('Force') -and $Force) { $splat.Force = $true }
         if ($PSBoundParameters.ContainsKey('WhatIf')) { $splat.WhatIf = $true }
         if ($PSBoundParameters.ContainsKey('Confirm')) { $splat.Confirm = $true }
 
-        foreach ($item in $Input) {
+        foreach ($item in $ArtistInput) {
             if ($null -eq $item) { continue }
             if ($item -is [string]) { $splat.ArtistName = $item }
             else {

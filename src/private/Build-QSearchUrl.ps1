@@ -14,8 +14,9 @@ function Build-QSearchUrl {
     )
 
     process {
-        # Combine album and artist for search, normalize spaces, then URL-encode
-        $search = "$Album $Artist" -replace '\s+', ' '
+        $cleanAlbum = Convert-TextNormalized $Album
+        $cleanArtist = Convert-TextNormalized $Artist
+        $search = "$cleanAlbum $cleanArtist" -replace '\s+', ' '
         $encoded = [System.Uri]::EscapeDataString($search)
         $url = "https://www.qobuz.com/$Culture/search/albums/$encoded"
         Write-Output $url

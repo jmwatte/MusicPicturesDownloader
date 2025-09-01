@@ -10,7 +10,7 @@ Download a single artist image from Qobuz.
 .PARAMETER ArtistName
 Artist name to search for.
 
-.PARAMETER DestinationPath
+.PARAMETER DestinationFolder
 Directory to save the downloaded image.
 
 .PARAMETER FileNameStyle
@@ -33,7 +33,7 @@ function Save-QobuzArtistImage {
 
 		[Parameter(Mandatory = $true, Position = 1)]
 		[ValidateNotNullOrEmpty()]
-		[string]$DestinationPath,
+		[string]$DestinationFolder,
 
 		[ValidateSet('Hyphen', 'Spaces')]
 		[string]$FileNameStyle = 'Hyphen',
@@ -45,8 +45,9 @@ function Save-QobuzArtistImage {
 	)
 
 	Begin {
-		if (-not (Test-Path -Path $DestinationPath)) { New-Item -Path $DestinationPath -ItemType Directory -Force | Out-Null }
-		$searchUrl = 'https://www.qobuz.com/be-nl/search/artists/' + [System.Uri]::EscapeDataString($ArtistName)
+		if (-not (Test-Path -Path $DestinationFolder)) { New-Item -Path $DestinationFolder -ItemType Directory -Force | Out-Null }
+		$cleanArtist = Convert-TextNormalized $ArtistName
+		$searchUrl = 'https://www.qobuz.com/be-nl/search/artists/' + [System.Uri]::EscapeDataString($cleanArtist)
 		Write-Log -Message "Searching Qobuz: $searchUrl" -Level Verbose -Category Search
 	}
 
@@ -124,7 +125,7 @@ function Save-QobuzArtistImage {
 			$chars = $fileBase.ToCharArray() | Where-Object { $invalid -notcontains $_ }
 			$fileBase = -join $chars
 			$fileName = ($fileBase.Trim() + '.jpg')
-			$outPath = Join-Path -Path $DestinationPath -ChildPath $fileName
+			$outPath = Join-Path -Path $DestinationFolder -ChildPath $fileName
 
 			if (Test-Path -Path $outPath -PathType Leaf -ErrorAction SilentlyContinue) {
 				if (-not $Force) { throw "File already exists: $outPath. Use -Force to overwrite." } else { Remove-Item -Path $outPath -Force -ErrorAction Stop }

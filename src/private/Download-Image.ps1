@@ -10,17 +10,61 @@ function Download-Image {
         [string]$ImageUrl,
         [Parameter(Mandatory=$true)]
         [string]$DestinationFolder,
+        [ValidateSet('Always','IfBigger','SkipIfExists')]
+        [string]$DownloadMode = 'Always',
+        [ValidateSet('Folder','Cover','Album-Artist','Artist-Album','Custom')]
+        [string]$FileNameStyle = 'Cover',
+        [string]$CustomFileName,
+        [string]$Album,
+        [string]$Artist,
         [string]$FileName
     )
 
     process {
         if (-not (Test-Path -Path $DestinationFolder)) { New-Item -Path $DestinationFolder -ItemType Directory -Force | Out-Null }
-        if (-not $FileName) {
-            $uri = [System.Uri]::new($ImageUrl)
-            $FileName = [System.IO.Path]::GetFileName($uri.LocalPath)
-            if (-not $FileName) { $FileName = "image_$([guid]::NewGuid().ToString()).jpg" }
+        # Determine file name based on style
+        switch ($FileNameStyle) {
+            'Folder' { $FileName = 'folder.jpg' } # literal string 'folder.jpg'
+            'Cover' { $FileName = 'cover.jpg' }
+            'Album-Artist' { $FileName = ("{0}-{1}.jpg" -f $Album, $Artist) -replace '[\\/:*?"<>|]', '_' }
+            'Artist-Album' { $FileName = ("{0}-{1}.jpg" -f $Artist, $Album) -replace '[\\/:*?"<>|]', '_' }
+            'Custom' {
+                if ($CustomFileName) {
+                    $FileName = $CustomFileName -replace '{Album}', $Album -replace '{Artist}', $Artist
+                    $FileName = $FileName -replace '[\\/:*?"<>|]', '_'
+                } else {
+                    $FileName = 'cover.jpg'
+                }
+            }
+            default {
+                if (-not $FileName) {
+                    $uri = [System.Uri]::new($ImageUrl)
+                    $FileName = [System.IO.Path]::GetFileName($uri.LocalPath)
+                    if (-not $FileName) { $FileName = "image_$([guid]::NewGuid().ToString()).jpg" }
+                }
+            }
         }
         $outPath = Join-Path $DestinationFolder $FileName
+
+        # DownloadMode logic
+        if (Test-Path -Path $outPath -PathType Leaf -ErrorAction SilentlyContinue) {
+            switch ($DownloadMode) {
+                'SkipIfExists' { return $outPath }
+                'IfBigger' {
+                    try {
+                        $existing = Get-Item -Path $outPath
+                        $uri = [System.Uri]::new($ImageUrl)
+                        $webReq = [System.Net.WebRequest]::Create($uri)
+                        $webReq.Method = 'HEAD'
+                        $webResp = $webReq.GetResponse()
+                        $remoteSize = $webResp.ContentLength
+                        $webResp.Close()
+                        if ($remoteSize -le $existing.Length) { return $outPath }
+                    } catch { }
+                }
+                'Always' { Remove-Item -Path $outPath -Force -ErrorAction SilentlyContinue }
+            }
+        }
 
         $params = @{
             Uri = $ImageUrl
