@@ -1,0 +1,13 @@
+
+given an album and an artist  and a destinationfolder ...
+ construct the appropriate URL and download the album cover image.
+ The appropriate url is https://www.qobuz.com/be-nl/search/albums/{album}
+by replacing {album} with the album name.
+example let it bleed rolling stones https://www.qobuz.com/be-nl/search/albums/the%20rolling%20stones%20let%20is%20bleed
+gets us ...
+the xpath for the image we find at //*[@id="search"]/section[2]/div/ul/li[1]/div/img
+but the problem might be that there are aother possible candidates for example at the xpath //*[@id="search"]/section[2]/div/ul/li[3]/div/img
+we have to check the title in xpath //*[@id="search"]/section[2]/div/ul/li[1]/div/div[1]/a to check if it fits the 
+album artist. We will find something like this  title="The Let It Bleed (50th Anniversary Edition / Remastered 2019) album by The Rolling Stones on Qobuz" or ...title="The Let It Bleed album by The Rolling Stones on Qobuz" If we asked for let it bleed
+we should have the second one. We have to tink about making sure that the result fits and that the user can judge wether the result fits or if there are possible problems. We should have the option to do it automatically for a whole bunch of album-artists inputs.
+And have a way for the user to review what has been done and that he can click on a link to the downloaded image or that he can click on the url to the searchresults and be able to manually pick the correct image. 

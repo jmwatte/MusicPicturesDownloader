@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Debug Save-QArtistsImages (The Beatles)",
+            "script": "${workspaceFolder}/scripts/debug_save_qartists.ps1",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            
+        }
+    ]
+}
