@@ -6,9 +6,10 @@ Public wrapper to find and save an album cover from Q.
 function Save-QAlbumCover {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
-        [string]$Album,
-        [string]$Artist,
+    [Parameter(Mandatory=$true)]
+    [string]$Album,
+    [Parameter(Mandatory=$true)]
+    [string]$Artist,
     [Parameter(Mandatory=$true)]
     [string]$DestinationFolder,
     [ValidateSet('230','600','max')]
@@ -19,7 +20,7 @@ function Save-QAlbumCover {
     )
 
     process {
-        $url = Build-QSearchUrl -Album "The beatles Revolver"#$Album
+    $url = Build-QSearchUrl -Album $Album -Artist $Artist
         Write-Verbose "[Save-QAlbumCover] Searching: $url"
 
         $html = Get-QSearchHtml -Url $url
