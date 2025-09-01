@@ -13,28 +13,9 @@ function Get-MatchQResult {
         $Candidate # object with TitleAttr property
     )
 
-    process {
-        function Get-NormalizedText([string]$s) {
-            if (-not $s) { return '' }
-            $t = $s.ToLowerInvariant()
-            $t = [System.Text.RegularExpressions.Regex]::Replace($t, "\(.*?\)", '') # remove parentheses
-            $t = [System.Text.RegularExpressions.Regex]::Replace($t, "[^\p{L}\p{Nd}\s]", '') # remove punctuation
-            $t = $t.Normalize([System.Text.NormalizationForm]::FormD)
-            # remove diacritics
-            $sb = New-Object System.Text.StringBuilder
-            foreach ($ch in $t.ToCharArray()) {
-                if ([Globalization.CharUnicodeInfo]::GetUnicodeCategory($ch) -ne 'NonSpacingMark') {
-                    [void]$sb.Append($ch)
-                }
-            }
-            $clean = $sb.ToString().Normalize([System.Text.NormalizationForm]::FormC)
-            $clean = [System.Text.RegularExpressions.Regex]::Replace($clean, '\s+', ' ').Trim()
-            return $clean
-        }
 
-
-        $reqAlbum = Get-NormalizedText $Album
-        $reqArtist = Get-NormalizedText $Artist
+        $reqAlbum = Convert-TextNormalized $Album
+        $reqArtist = Convert-TextNormalized $Artist
         $candTitleRaw = $Candidate.TitleAttr
 
         # Extract album and artist from candidate title (Qobuz format: 'More details on {album} by {artist}.')
@@ -46,8 +27,8 @@ function Get-MatchQResult {
         } else {
             $candAlbum = $candTitleRaw
         }
-        $candAlbum = Get-NormalizedText $candAlbum
-        $candArtist = Get-NormalizedText $candArtist
+        $candAlbum = Convert-TextNormalized $candAlbum
+        $candArtist = Convert-TextNormalized $candArtist
 
         $reqAlbumTokens = if ($reqAlbum) { $reqAlbum -split ' ' } else { @() }
         $reqArtistTokens = if ($reqArtist) { $reqArtist -split ' ' } else { @() }
@@ -101,4 +82,4 @@ function Get-MatchQResult {
         }
         Write-Output $result
     }
-}
+

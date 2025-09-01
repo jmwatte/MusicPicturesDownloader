@@ -43,3 +43,4 @@ run the check as multiple commands to avoid the long one-liner parse issue Or wr
 Ensure all private ps1 files define a function and do not contain top-level param blocks or code, so that importing the module does not prompt for parameters or execute code."
 Prefer Splatting over long pwsh commands.Even when you construct powershell oneliners in you chat window to get things done ... prefer splatting or create a small helper ps1.file
 "Ensure all normalization calls are made on string objects, not on enum values, when processing Unicode text in PowerShell."
+Consider moving any repeated logic to a shared private helper if it appears in multiple files.
