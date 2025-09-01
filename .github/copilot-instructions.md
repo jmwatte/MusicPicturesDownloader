@@ -35,8 +35,11 @@ we will have at least 2 folders in the project structure:
 in a there will be 2 folders : public and private.
 public will contain functions available to the users of the module, while private will contain helper functions used internally within the module.
 the private folder will include ps1 files with 1 function per file. the name of the file will match the name of the function it contains.
-
+"Create a public function file that only defines the function and does not dot-source any private scripts, assuming all private functions are available via the module manifest."
 when doing things like this 
-pwsh.exe -NoProfile -Command "$m = Get-Module -ListAvailable -Name PowerHtml; if ($m) { $m | Select-Object Name, Version, Path | Format-List -Force } else { Write-Output '===NOT INSTALLED==='; try { Find-Module -Name PowerHtml -Repository PSGallery -ErrorAction Stop | Select-Object Name, Version, Repository, Summary } catch { Write-Output '===NOT FOUND ON PSGALLERY===' } }"
+"pwsh.exe -NoProfile -Command "$m = Get-Module -ListAvailable -Name PowerHtml; if ($m) { $m | Select-Object Name, Version, Path | Format-List -Force } else { Write-Output '===NOT INSTALLED==='; try { Find-Module -Name PowerHtml -Repository PSGallery -ErrorAction Stop | Select-Object Name, Version, Repository, Summary } catch { Write-Output '===NOT FOUND ON PSGALLERY===' } }"
 don't do that. Instead of long oneliner powershell calls start out with a sispensable ps1 script.
-run the check as multiple commands to avoid the long one-liner parse issue Or write a small helper ps1 that you delete when the task is correctly finished
+run the check as multiple commands to avoid the long one-liner parse issue Or write a small helper ps1 that you delete when the task is correctly finished.
+Ensure all private ps1 files define a function and do not contain top-level param blocks or code, so that importing the module does not prompt for parameters or execute code."
+Prefer Splatting over long pwsh commands.Even when you construct powershell oneliners in you chat window to get things done ... prefer splatting or create a small helper ps1.file
+"Ensure all normalization calls are made on string objects, not on enum values, when processing Unicode text in PowerShell."
