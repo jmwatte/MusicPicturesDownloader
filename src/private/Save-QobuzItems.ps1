@@ -75,6 +75,8 @@ function Save-QobuzItems {
                         Write-Log -Message "Processing item: $artist" -Level Verbose -Category Bulk
                         $out = Save-QobuzArtistImage @artistImageParameters
                         $results += [PSCustomObject]@{ Artist = $artist; Path = $out; Status = 'Success'; ErrorMessage = $null }
+                        # print summary for the downloaded artist image
+                        try { Write-SummaryLine -InputArtist $artist -InputAlbum $null -InputTitle $null -ResultArtist $artist -ResultAlbum $null -ResultTitle $null -Location $out } catch {}
                     }
                 }
                 catch {

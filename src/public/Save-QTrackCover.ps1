@@ -221,6 +221,8 @@ function Save-QTrackCover {
                             try { Remove-Item -Path $local -Force -ErrorAction SilentlyContinue } catch {}
                             try { Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue } catch {}
                         }
+                        # print one-line summary
+                        Write-SummaryLine -InputArtist $SearchArtist -InputAlbum $SearchAlbum -InputTitle $SearchTrack -ResultArtist $meta.Artist -ResultAlbum $meta.Album -ResultTitle $meta.Title -Location ("embedded in $AudioFilePath")
                         Write-Output $true; return
                     } else {
                         # attempt cleanup on failure too
@@ -230,7 +232,9 @@ function Save-QTrackCover {
                         }
                         Write-Output $false; return
                     }
-            } else {
+                } else {
+                # report downloaded path and print summary
+                Write-SummaryLine -InputArtist $SearchArtist -InputAlbum $SearchAlbum -InputTitle $SearchTrack -ResultArtist $meta.Artist -ResultAlbum $meta.Album -ResultTitle $meta.Title -Location $local
                 Write-Output $local
                 return
             }

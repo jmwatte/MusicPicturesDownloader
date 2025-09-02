@@ -141,6 +141,8 @@ function Save-QAlbumCover {
         }
 
         if ($autoDownloaded) {
+            # print one-line summary
+            Write-SummaryLine -InputArtist $Artist -InputAlbum $Album -InputTitle $null -ResultArtist $Artist -ResultAlbum $Album -ResultTitle $null -Location $local
             if ($ShowRawTags -and $local) { Write-Output "Downloaded: $local" }
             Write-Output $local
             if ($reportPath) { Write-Output $reportPath }
