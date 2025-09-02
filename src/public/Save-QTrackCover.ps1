@@ -92,6 +92,7 @@ function Save-QTrackCover {
         [string]$FileNameStyle = 'Cover',
         [string]$CustomFileName,
     [switch]$NoAuto,
+    [switch]$ShowRawTags,
         [double]$Threshold = 0.75,
         [int]$MaxCandidates = 10,
         [switch]$GenerateReport,
@@ -107,7 +108,10 @@ function Save-QTrackCover {
         if ($PSBoundParameters.ContainsKey('AudioFilePath') -and $AudioFilePath) {
             Write-Verbose "[Save-QTrackCover] Reading metadata from $AudioFilePath"
             $meta = Get-TrackMetadataFromFile -AudioFilePath $AudioFilePath
-            Write-Verbose ("[Save-QTrackCover] Metadata: Title={0}, Album={1}, Artist={2}" -f $meta.Title, $meta.Album, $meta.Artist)
+                Write-Verbose ("[Save-QTrackCover] Metadata: Title={0}, Album={1}, Artist={2}" -f $meta.Title, $meta.Album, $meta.Artist)
+                if ($ShowRawTags) {
+                    Write-Output "RAW_TAGS:"; $meta.Tags.GetEnumerator() | ForEach-Object { Write-Output ("{0} = {1}" -f $_.Key, $_.Value) }
+                }
 
             if ($Interactive -and -not $UseTags) {
                 $choices = @()

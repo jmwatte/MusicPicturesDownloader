@@ -40,27 +40,41 @@ function Get-TrackMetadataFromFile {
             return [PSCustomObject]@{ Title = $null; Album = $null; Artist = $null; Tags = @{} }
         }
 
-        $tags = @{}
+        # Build a case-insensitive hashtable of tags merging format and stream tags
+        $tags = [hashtable]::new([System.StringComparer]::InvariantCultureIgnoreCase)
         if ($json.format -and $json.format.tags) {
-            foreach ($k in $json.format.tags.PSObject.Properties.Name) {
-                $tags[$k] = $json.format.tags.$k
+            $json.format.tags.PSObject.Properties | ForEach-Object { $tags[$_.Name] = $_.Value }
+        }
+        if ($json.streams) {
+            foreach ($s in $json.streams) {
+                if ($s.tags) { $s.tags.PSObject.Properties | ForEach-Object { if (-not $tags.ContainsKey($_.Name)) { $tags[$_.Name] = $_.Value } } }
             }
         }
 
-        # Normalize common keys (case-insensitive)
-        $getTag = {
-            param($keys)
+        # Helper: return first non-empty tag from a list of candidate keys (case-insensitive)
+        function Get-FirstTagValue { param([string[]] $keys) 
             foreach ($k in $keys) {
-                if ($tags.ContainsKey($k)) { return $tags[$k] }
-                $low = $k.ToLower()
-                foreach ($tk in $tags.Keys) { if ($tk.ToLower() -eq $low) { return $tags[$tk] } }
+                if ($k -and $tags.ContainsKey($k)) {
+                    $v = $tags[$k]
+                    if ($v -and ($v.ToString().Trim().Length -gt 0)) { return $v.ToString().Trim() }
+                }
             }
             return $null
         }
 
-        $title = & $getTag @('title','TIT2')
-        $album = & $getTag @('album','ALBUM')
-        $artist = & $getTag @('artist','ARTIST','performer','PERFORMER')
+        # Common candidate keys (cover ID3v2 frames and common names)
+        $titleKeys = @('title','TIT2','TITLE')
+        $albumKeys = @('album','TALB','ALBUM')
+        $artistKeys = @('artist','TPE1','artist_sort','artists','artist;albumartist','albumartist','album_artist','TPE2','performer','performer_sort','composer')
+
+        $title = Get-FirstTagValue -keys $titleKeys
+        $album = Get-FirstTagValue -keys $albumKeys
+        $artist = Get-FirstTagValue -keys $artistKeys
+
+        # Fallbacks and normalization
+        if (-not $title) { $title = $null }
+        if (-not $album) { $album = $null }
+        if (-not $artist) { $artist = $null }
 
         return [PSCustomObject]@{
             Title = $title

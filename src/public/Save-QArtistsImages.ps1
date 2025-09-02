@@ -61,7 +61,10 @@ function Save-QArtistsImages {
     [switch]$Force,
 
     [Parameter()]
-    [switch]$NoAuto
+    [switch]$NoAuto,
+
+    [Parameter()]
+    [switch]$ShowRawTags
     )
     process {
         $splat = @{ DestinationFolder = $DestinationFolder; PreferredSize = $PreferredSize }

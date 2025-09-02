@@ -69,6 +69,7 @@ function Save-QAlbumCover {
     [string]$FileNameStyle = 'Cover',
     [string]$CustomFileName,
     [switch]$NoAuto,
+    [switch]$ShowRawTags,
     [double]$Threshold = 0.75,
     [switch]$GenerateReport,
     [int]$MaxCandidates = 10
@@ -140,6 +141,7 @@ function Save-QAlbumCover {
         }
 
         if ($autoDownloaded) {
+            if ($ShowRawTags -and $local) { Write-Output "Downloaded: $local" }
             Write-Output $local
             if ($reportPath) { Write-Output $reportPath }
         } elseif ($scored.Count -gt 0) {
