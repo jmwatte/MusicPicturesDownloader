@@ -24,7 +24,7 @@ Overwrite existing files.
 
 .PARAMETER Auto
     Present for API parity with public helpers. This switch is accepted but currently treated as a no-op
-    by the bulk downloader; it is forwarded for compatibility.
+    by the bulk downloader; it is forwarded for compatibility. Use -NoAuto to suppress automatic downloads.
 
 .OUTPUTS
 Returns an array of PSCustomObject with properties: Artist, Path, Status, ErrorMessage.
@@ -48,7 +48,7 @@ function Save-QobuzItems {
 
     [switch]$Force,
 
-    [switch]$Auto
+    [switch]$NoAuto
     )
 
 

@@ -41,13 +41,13 @@
 .PARAMETER MaxCandidates
     Maximum number of candidates to evaluate from the search results.
 
-.EXAMPLE
-    # Download cover for an album
-    Save-QAlbumCover -Album 'Rumours' -Artist 'Fleetwood Mac' -DestinationFolder 'C:\Covers' -Auto
+EXAMPLE
+    # Download cover for an album (downloads by default)
+    Save-QAlbumCover -Album 'Rumours' -Artist 'Fleetwood Mac' -DestinationFolder 'C:\Covers'
 
-.EXAMPLE
-    # Generate a report for manual inspection
-    Save-QAlbumCover -Album 'Kind Of Blue' -Artist 'Miles Davis' -DestinationFolder 'C:\Covers' -GenerateReport
+EXAMPLE
+    # Preview / report-only: do not download
+    Save-QAlbumCover -Album 'Kind Of Blue' -Artist 'Miles Davis' -DestinationFolder 'C:\Covers' -NoAuto -GenerateReport
 
 .NOTES
     - Requires the PowerHTML module for HTML parsing.
@@ -68,7 +68,7 @@ function Save-QAlbumCover {
     [ValidateSet('Folder','Cover','Album-Artist','Artist-Album','Custom')]
     [string]$FileNameStyle = 'Cover',
     [string]$CustomFileName,
-    [switch]$Auto,
+    [switch]$NoAuto,
     [double]$Threshold = 0.75,
     [switch]$GenerateReport,
     [int]$MaxCandidates = 10
@@ -116,7 +116,7 @@ function Save-QAlbumCover {
         $reportPath = $null
         $local = $null
         $autoDownloaded = $false
-        if ($Auto -and $scored.Count -gt 0 -and $scored[0].Score -ge $Threshold) {
+    if (-not $NoAuto -and $scored.Count -gt 0 -and $scored[0].Score -ge $Threshold) {
             $best = $scored[0].Candidate
             $imgUrl = $best.ImageUrl
             if ($imgUrl -match '_\d+\.jpg$') {

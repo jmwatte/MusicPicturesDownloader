@@ -12,10 +12,10 @@
 .PARAMETER DestinationFolder
     Local folder path where images will be saved. Mandatory.
 
-.PARAMETER Auto
-    Present for API parity with other public functions. This switch is a no-op for bulk artist downloads
-    (images are always downloaded for each artist). It is accepted and forwarded to the underlying
-    implementation for compatibility.
+.PARAMETER NoAuto
+    When specified, do NOT automatically download images; by default this function will download
+    images for each artist. This switch is accepted for API parity and will suppress automatic
+    downloads (treated as a preview/dry-run for bulk operations).
 
 .PARAMETER PreferredSize
     Preferred image size. Valid values: large, medium, small. Default is large.
@@ -23,17 +23,21 @@
 .PARAMETER Force
     Switch to overwrite existing files when applicable.
 
-.EXAMPLE
-    # Download a single artist image
+EXAMPLE
+    # Download a single artist image (downloads by default)
     Save-QArtistsImages 'Pink Floyd' -DestinationFolder 'C:\Music\ArtistImages'
 
-.EXAMPLE
+EXAMPLE
     # Pipeline input with multiple artists
     'Adele','Coldplay' | Save-QArtistsImages -DestinationFolder 'C:\Music\ArtistImages'
 
-.EXAMPLE
+EXAMPLE
     # Use object pipeline input
     [pscustomobject]@{ ArtistName = 'Radiohead' } | Save-QArtistsImages -DestinationFolder 'C:\Music\ArtistImages'
+
+EXAMPLE
+    # Preview / report-only for bulk: do not perform downloads
+    'Adele','Coldplay' | Save-QArtistsImages -DestinationFolder 'C:\Music\ArtistImages' -NoAuto
 
 .NOTES
     - This function delegates to Save-QobuzItems which performs the actual network calls and downloads.
@@ -57,7 +61,7 @@ function Save-QArtistsImages {
     [switch]$Force,
 
     [Parameter()]
-    [switch]$Auto
+    [switch]$NoAuto
     )
     process {
         $splat = @{ DestinationFolder = $DestinationFolder; PreferredSize = $PreferredSize }
@@ -74,7 +78,7 @@ function Save-QArtistsImages {
                 else { $splat.ArtistName = $item.ToString() }
             }
 
-            if ($PSBoundParameters.ContainsKey('Auto') -and $Auto) { $splat.Auto = $true }
+            if ($PSBoundParameters.ContainsKey('NoAuto') -and $NoAuto) { $splat.NoAuto = $true }
             Save-QobuzItems @splat
         }
     }

@@ -37,8 +37,10 @@
 .PARAMETER CustomFileName
     When FileNameStyle is Custom, this template will be used. Use placeholders like {Track} and {Artist}.
 
-.PARAMETER Auto
-    When set, automatically downloads the top-scoring candidate if it meets the -Threshold.
+.PARAMETER NoAuto
+    When specified, do NOT automatically download the top-scoring candidate; by default the
+    function will download the best match when it meets the -Threshold. Use this switch to
+    perform a preview/report-only run.
 
 .PARAMETER Threshold
     Score threshold (0..1) for automatic download when -Auto is used. Default: 0.75
@@ -56,16 +58,16 @@
     When set together with -AudioFilePath, prompts interactively to choose which tags to use for the search.
 
 .EXAMPLE
-    # Download the best matching cover for a track and save it to C:\Covers
-    Save-QTrackCover -Track 'In The Wee Small Hours' -Artist 'Frank Sinatra' -DestinationFolder 'C:\Covers' -Auto -Verbose
+    # Download the best matching cover for a track and save it to C:\Covers (downloads by default)
+    Save-QTrackCover -Track 'In The Wee Small Hours' -Artist 'Frank Sinatra' -DestinationFolder 'C:\Covers' -Verbose
 
 .EXAMPLE
-    # Read tags from an mp3 and embed the found image into the file
-    Save-QTrackCover -AudioFilePath 'C:\Music\track.mp3' -UseTags Track,Artist -Embed -Auto
+    # Read tags from an mp3 and embed the found image into the file (embed after download)
+    Save-QTrackCover -AudioFilePath 'C:\Music\track.mp3' -UseTags Track,Artist -Embed
 
 .EXAMPLE
-    # Generate a report of candidates without downloading
-    Save-QTrackCover -Track 'Song Title' -Artist 'Artist Name' -GenerateReport
+    # Preview / report-only: do not download, only generate a candidate report
+    Save-QTrackCover -Track 'Song Title' -Artist 'Artist Name' -NoAuto -GenerateReport
 
 .NOTES
     - Requires the PowerHTML module for HTML parsing and FFmpeg (ffmpeg.exe) in PATH for embedding.
@@ -89,7 +91,7 @@ function Save-QTrackCover {
         [ValidateSet('Cover', 'Track-Artist', 'Artist-Track', 'Custom')]
         [string]$FileNameStyle = 'Cover',
         [string]$CustomFileName,
-        [switch]$Auto,
+    [switch]$NoAuto,
         [double]$Threshold = 0.75,
         [int]$MaxCandidates = 10,
         [switch]$GenerateReport,
@@ -178,7 +180,7 @@ function Save-QTrackCover {
         $reportPath = $null
         $local = $null
         $autoDownloaded = $false
-        if ($Auto -and $scored.Count -gt 0 -and $scored[0].Score -ge $Threshold) {
+    if (-not $NoAuto -and $scored.Count -gt 0 -and $scored[0].Score -ge $Threshold) {
             $best = $scored[0].Candidate
             $imgUrl = $best.ImageUrl
             if ($imgUrl -match '_\d+\.jpg$') {
@@ -206,7 +208,7 @@ function Save-QTrackCover {
             Write-Verbose ("[Save-QTrackCover] Report written: {0}" -f $reportPath)
         }
 
-        if ($autoDownloaded) {
+            if ($autoDownloaded) {
             if ($Embed -and $AudioFilePath) {
                 $ok = Set-TrackImageWithFFmpeg -AudioFilePath $AudioFilePath -ImagePath $local
                     if ($ok) {
