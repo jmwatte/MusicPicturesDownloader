@@ -1,26 +1,75 @@
 <#
 .SYNOPSIS
-    Downloads or embeds a cover image for a track from Qobuz.
+    Download or embed a track cover image from Qobuz.
+
 .DESCRIPTION
-    Searches Qobuz for a track, retrieves the cover image, and either saves it to a folder or embeds it into a specified audio file using FFmpeg.
+    Searches Qobuz for a track using the provided Track/Artist (and optional Album) or by reading tags
+    from an audio file. The function returns scored candidate matches and can automatically download
+    the best match or embed the downloaded image into an audio file using FFmpeg.
+
 .PARAMETER Track
-    The track name to search for.
+    The track title to search for. Required when using the ByNames parameter set.
+
 .PARAMETER Artist
-    The artist name.
+    The artist name to search for. Required when using the ByNames parameter set.
+
 .PARAMETER Album
-    The album name (optional, for more precise search).
-.PARAMETER DestinationFolder
-    Where to save the image (if not embedding).
+    Optional album name to narrow the search.
+
 .PARAMETER AudioFilePath
-    Path to the audio file to embed the image into (if -Embed is specified).
+    Path to an existing audio file. When provided you can read tag fields (Title/Artist/Album)
+    and use them as search inputs via -UseTags or -Interactive.
+
+.PARAMETER DestinationFolder
+    Folder where images will be saved when not embedding. If omitted and an image is written a
+    temporary folder under $env:TEMP will be used for report generation.
+
 .PARAMETER Embed
-    Switch: if set, embed the image into the audio file using FFmpeg.
+    When specified, the downloaded image will be embedded into the audio file specified by
+    -AudioFilePath using FFmpeg. Temporary files are cleaned up after embedding.
+
 .PARAMETER DownloadMode
-    Controls download behavior (Always, IfBigger, SkipIfExists).
+    Controls how images are downloaded: Always, IfBigger, or SkipIfExists.
+
 .PARAMETER FileNameStyle
-    Controls naming of the saved image file.
+    Controls the naming scheme for saved images: Cover, Track-Artist, Artist-Track, or Custom.
+
 .PARAMETER CustomFileName
-    Custom file name for the image.
+    When FileNameStyle is Custom, this template will be used. Use placeholders like {Track} and {Artist}.
+
+.PARAMETER Auto
+    When set, automatically downloads the top-scoring candidate if it meets the -Threshold.
+
+.PARAMETER Threshold
+    Score threshold (0..1) for automatic download when -Auto is used. Default: 0.75
+
+.PARAMETER MaxCandidates
+    Maximum number of candidates to evaluate from the search results.
+
+.PARAMETER GenerateReport
+    When set, emits a JSON report with candidate scores and details. The report path is also returned.
+
+.PARAMETER UseTags
+    When an audio file is supplied, list which tag fields to use for the search. Valid values: Track, Artist, Album.
+
+.PARAMETER Interactive
+    When set together with -AudioFilePath, prompts interactively to choose which tags to use for the search.
+
+.EXAMPLE
+    # Download the best matching cover for a track and save it to C:\Covers
+    Save-QTrackCover -Track 'In The Wee Small Hours' -Artist 'Frank Sinatra' -DestinationFolder 'C:\Covers' -Auto -Verbose
+
+.EXAMPLE
+    # Read tags from an mp3 and embed the found image into the file
+    Save-QTrackCover -AudioFilePath 'C:\Music\track.mp3' -UseTags Track,Artist -Embed -Auto
+
+.EXAMPLE
+    # Generate a report of candidates without downloading
+    Save-QTrackCover -Track 'Song Title' -Artist 'Artist Name' -GenerateReport
+
+.NOTES
+    - Requires the PowerHTML module for HTML parsing and FFmpeg (ffmpeg.exe) in PATH for embedding.
+    - Temporary files used for embedding are removed after the operation.
 #>
 function Save-QTrackCover {
     [CmdletBinding()]

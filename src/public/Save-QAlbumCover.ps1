@@ -1,57 +1,56 @@
 
 <#
 .SYNOPSIS
-Finds and saves an album cover from Qobuz for a given album and artist.
+    Find and save an album cover from Qobuz.
 
 .DESCRIPTION
-Searches Qobuz for the specified album and artist, scores candidates, and downloads the best match according to the specified options. Supports automatic download, candidate reporting, file naming, and download mode control.
+    Searches Qobuz for the given Album and Artist, scores candidate results, and downloads the
+    best match according to provided options. Supports automatic download, file naming styles,
+    download modes, and optional JSON report generation.
 
 .PARAMETER Album
-The album name to search for. Mandatory.
+    The album name to search for. Mandatory.
 
 .PARAMETER Artist
-The artist name to search for. Mandatory.
+    The artist name to search for. Mandatory.
 
 .PARAMETER DestinationFolder
-The folder where the album cover will be saved. Mandatory.
+    The folder where the album cover will be saved.
 
 .PARAMETER Size
-Preferred image size: 230, 600, or max. Default is 230.
+    Preferred image size: 230, 600, or max. Default is 230.
 
 .PARAMETER DownloadMode
-Controls download behavior: Always (overwrite), IfBigger (only if remote image is larger), SkipIfExists (skip if file exists). Default is Always.
+    Controls download behavior: Always (overwrite), IfBigger (only if remote image is larger), SkipIfExists (skip if file exists).
 
 .PARAMETER FileNameStyle
-Controls file naming: Folder (folder.jpg), Cover (cover.jpg), Album-Artist, Artist-Album, or Custom (use CustomFileName). Default is Cover.
+    Naming scheme for saved images: Folder, Cover, Album-Artist, Artist-Album, or Custom.
 
 .PARAMETER CustomFileName
-Custom file name format string (use {Album} and {Artist} as placeholders). Used if FileNameStyle is Custom.
+    Template for custom file names when FileNameStyle is Custom. Use {Album} and {Artist} placeholders.
 
 .PARAMETER Auto
-If set, automatically downloads the best candidate if its score meets the threshold.
+    When set, automatically downloads the top-scoring candidate if it meets the -Threshold.
 
 .PARAMETER Threshold
-Minimum score required for auto-download. Default is 0.75.
+    Score threshold (0..1) for automatic download when -Auto is used. Default: 0.75
 
 .PARAMETER GenerateReport
-If set, generates a JSON report of all candidates and their scores.
+    When set, emits a JSON report containing candidate details and scores.
 
 .PARAMETER MaxCandidates
-Maximum number of candidates to consider. Default is 10.
-
-.OUTPUTS
-If -Auto is used and a cover is downloaded: outputs the local file path. If a report is generated, also outputs the report file path.
-If -Auto is not used: outputs an array of scored candidate objects. If a report is generated, also outputs the report file path.
-If no candidates are found: outputs $null (and report path if generated).
+    Maximum number of candidates to evaluate from the search results.
 
 .EXAMPLE
-Save-QAlbumCover -Album "Back in Black" -Artist "AC/DC" -DestinationFolder "C:\Covers" -Auto -Verbose
+    # Download cover for an album
+    Save-QAlbumCover -Album 'Rumours' -Artist 'Fleetwood Mac' -DestinationFolder 'C:\Covers' -Auto
 
 .EXAMPLE
-Save-QAlbumCover -Album "Thriller" -Artist "Michael Jackson" -DestinationFolder "C:\Covers" -GenerateReport -FileNameStyle Album-Artist
+    # Generate a report for manual inspection
+    Save-QAlbumCover -Album 'Kind Of Blue' -Artist 'Miles Davis' -DestinationFolder 'C:\Covers' -GenerateReport
 
 .NOTES
-Requires PowerHTML module for HTML parsing.
+    - Requires the PowerHTML module for HTML parsing.
 #>
 function Save-QAlbumCover {
     [CmdletBinding()]

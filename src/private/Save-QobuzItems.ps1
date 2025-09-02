@@ -22,6 +22,10 @@ Preferred image size: large (default), medium or small.
 .PARAMETER Force
 Overwrite existing files.
 
+.PARAMETER Auto
+    Present for API parity with public helpers. This switch is accepted but currently treated as a no-op
+    by the bulk downloader; it is forwarded for compatibility.
+
 .OUTPUTS
 Returns an array of PSCustomObject with properties: Artist, Path, Status, ErrorMessage.
 #>
@@ -42,7 +46,9 @@ function Save-QobuzItems {
     [ValidateSet('large','medium','small')]
     [string]$PreferredSize = 'large',
 
-    [switch]$Force
+    [switch]$Force,
+
+    [switch]$Auto
     )
 
 
