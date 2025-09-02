@@ -1,0 +1,27 @@
+<#
+.SYNOPSIS
+    Parses Qobuz track search HTML to extract the first track image URL and metadata.
+.DESCRIPTION
+    Uses PowerHTML to parse the HTML and extract the image URL and track info from the first result.
+.PARAMETER Html
+    The HTML content from the Qobuz search page.
+#>
+function ConvertFrom-QTrackSearchResults {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Html
+    )
+    $doc = ConvertFrom-Html -Content $Html
+    $imgNode = $doc.SelectSingleNode('//*[@id="search"]/section[2]/div/ul/li[1]/div/a/img')
+    if (-not $imgNode) {
+        Write-Output "No track image found."
+        return $null
+    }
+    $imgUrl = $imgNode.src
+    $trackTitle = $imgNode.GetAttribute('alt')
+    [PSCustomObject]@{
+        ImageUrl = $imgUrl
+        TrackTitle = $trackTitle
+    }
+}

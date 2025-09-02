@@ -44,3 +44,4 @@ Ensure all private ps1 files define a function and do not contain top-level para
 Prefer Splatting over long pwsh commands.Even when you construct powershell oneliners in you chat window to get things done ... prefer splatting or create a small helper ps1.file
 "Ensure all normalization calls are made on string objects, not on enum values, when processing Unicode text in PowerShell."
 Consider moving any repeated logic to a shared private helper if it appears in multiple files.
+always used approved verbs in the naming of functions
