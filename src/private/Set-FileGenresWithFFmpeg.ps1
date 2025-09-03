@@ -6,7 +6,7 @@ function Set-FileGenresWithFFmpeg {
         [switch] $Replace
     )
 
-    if (-not (Test-Path $AudioFilePath)) { throw "Audio file not found: $AudioFilePath" }
+    if (-not (Test-Path -LiteralPath $AudioFilePath)) { throw "Audio file not found: $AudioFilePath" }
     $ffmpeg = Get-Command ffmpeg -ErrorAction SilentlyContinue
     if (-not $ffmpeg) { throw "ffmpeg is required to write tags. Ensure ffmpeg.exe is in PATH." }
 
@@ -38,7 +38,25 @@ function Set-FileGenresWithFFmpeg {
             else { $oldGenres = $null }
         }
 
-        Move-Item -Path $out -Destination $AudioFilePath -Force
+        # Copy output over original with retry/backoff to handle transient locks
+        $maxAttempts = 5
+        $attempt = 0
+        $copied = $false
+        while (-not $copied -and $attempt -lt $maxAttempts) {
+            try {
+                if (Test-Path -LiteralPath $AudioFilePath) {
+                    try { Set-ItemProperty -LiteralPath $AudioFilePath -Name IsReadOnly -Value $false -ErrorAction SilentlyContinue } catch {}
+                    try { Remove-Item -LiteralPath $AudioFilePath -Force -ErrorAction SilentlyContinue } catch {}
+                }
+                Copy-Item -LiteralPath $out -Destination $AudioFilePath -Force -ErrorAction Stop
+                $copied = $true
+            } catch {
+                $attempt++
+                $wait = [math]::Min(2, [math]::Pow(2, $attempt) * 0.2)
+                Start-Sleep -Seconds $wait
+                if ($attempt -ge $maxAttempts) { throw "Failed to replace original file after $maxAttempts attempts: $_" }
+            }
+        }
         Remove-Item -Path $temp -Recurse -Force -ErrorAction SilentlyContinue
         return @{ Ok = $true; OldGenres = $oldGenres }
     } catch {

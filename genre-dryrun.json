@@ -1,0 +1,1533 @@
+[
+  "Dry-run: C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\09 - Coming Up.mp3 -> britpop;punk;swedish punk;post-hardcore",
+  "Dry-run: C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\10 - Good Shit.mp3 -> britpop;experimental;noise;metal",
+  "Dry-run: C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\11 - Good To Be On The Road Back Home.mp3 -> britpop;electronic;korean;ambient",
+  "Dry-run: C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\12 - It's Indian Tobacco My Friend.mp3 -> britpop;lo-fi;mistagged artist;i am too lazy to make tags right",
+  "Dry-run: C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\13 - Candyman.mp3 -> britpop;halftime;sludge;doom metal",
+  "Dry-run: C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\14 - State Troopers [Part I].mp3 -> britpop;rac;60s;coldwave",
+  "Dry-run: C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\15 - Norwegian Wood (This Bird Has Flown).mp3 -> britpop;mistagged track;blues;russian",
+  "Dry-run: C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\01_Country_Joe_and_the_Fish_-_Flying_High-OBSERVER.mp3 -> 1967;psychedelic;american",
+  "Dry-run: C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\02_Country_Joe_and_the_Fish_-_Not_So_Sweet_Martha_Lorraine-OBSE.mp3 -> 1967;psychedelic;american",
+  "Dry-run: C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\03_Country_Joe_and_the_Fish_-_Death_Sound-OBSERVER.mp3 -> 1967;psychedelic;american",
+  "Dry-run: C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\04_Country_Joe_and_the_Fish_-_Porpoise_Mouth-OBSERVER.mp3 -> 1967;psychedelic;american",
+  "Dry-run: C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\05_Country_Joe_and_the_Fish_-_Section_43-OBSERVER.mp3 -> 1967;psychedelic;american",
+  "Dry-run: C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\06_Country_Joe_and_the_Fish_-_Super_Bird-OBSERVER.mp3 -> 1967;psychedelic;american",
+  "Dry-run: C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\07_Country_Joe_and_the_Fish_-_Sad_and_Lonely_Times-OBSERVER.mp3 -> 1967;psychedelic;american",
+  "Dry-run: C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\08_Country_Joe_and_the_Fish_-_Love-OBSERVER.mp3 -> 1967;psychedelic;american",
+  "Dry-run: C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\09_Country_Joe_and_the_Fish_-_Bass_Strings-OBSERVER.mp3 -> 1967;psychedelic;american",
+  "Dry-run: C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\10_Country_Joe_and_the_Fish_-_The_Masked_Marauder-OBSERVER.mp3 -> 1967;psychedelic;american",
+  "Dry-run: C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\11_Country_Joe_and_the_Fish_-_Grace-OBSERVER.mp3 -> 1967;psychedelic;american",
+  "Dry-run: C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\09 - Off The Wall.mp3 -> rock;blues;classic;modern;punk;swedish punk;post-hardcore",
+  "Dry-run: C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\10 - Oh Why (I Need You So Bad).mp3 -> rock;blues;classic;modern;experimental;noise;metal",
+  "Dry-run: C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\11 - Polly Put The Kettle On.mp3 -> rock;blues;classic;modern;electronic;korean;ambient",
+  "Dry-run: C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\12 - So Glad You're Mine.mp3 -> rock;blues;classic;modern;lo-fi;mistagged artist;i am too lazy to make tags right",
+  "Dry-run: C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\13 - South Side Boogie.mp3 -> rock;blues;classic;modern;halftime;sludge;doom metal",
+  "Dry-run: C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\14 - Sweet Sixteen.mp3 -> rock;blues;classic;modern;rac;60s;coldwave",
+  "Dry-run: C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\15 - The Creeper.mp3 -> rock;blues;classic;modern;mistagged track;russian",
+  "Dry-run: C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\16 - There's Something On Your Mind.mp3 -> rock;blues;classic;modern;sludge;hardcore;sludge metal",
+  "Dry-run: C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\17 - Turn On Your Love Life.mp3 -> rock;blues;classic;modern;swedish;hard rock",
+  "Dry-run: C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\18 - V8 Ford Blues.mp3 -> rock;blues;classic;modern;metal;ambient",
+  "Dry-run: C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\19 - You Know It Ain't Right.mp3 -> rock;blues;classic;modern;japanese;j-pop;folk",
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\01 - Sleep On The Left Side.mp3",
+    "OldGenres": "britpop",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\02 - Brimful Of Asha.mp3",
+    "OldGenres": "britpop",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\03 - Butter The Soul.mp3",
+    "OldGenres": "britpop",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\04 - Chocolat.mp3",
+    "OldGenres": "britpop",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\05 - We're In Yr Corner.mp3",
+    "OldGenres": "britpop",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\06 - Funky Days Are Back Again.mp3",
+    "OldGenres": "britpop",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\07 - What Is Happening.mp3",
+    "OldGenres": "britpop",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\08 - When The Light Appears Boy.mp3",
+    "OldGenres": "britpop",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\09 - Coming Up.mp3",
+    "OldGenres": "britpop",
+    "NewGenres": [
+      "britpop",
+      "punk",
+      "swedish punk",
+      "post-hardcore"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\10 - Good Shit.mp3",
+    "OldGenres": "britpop",
+    "NewGenres": [
+      "britpop",
+      "experimental",
+      "noise",
+      "metal"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\11 - Good To Be On The Road Back Home.mp3",
+    "OldGenres": "britpop",
+    "NewGenres": [
+      "britpop",
+      "electronic",
+      "korean",
+      "ambient"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\12 - It's Indian Tobacco My Friend.mp3",
+    "OldGenres": "britpop",
+    "NewGenres": [
+      "britpop",
+      "lo-fi",
+      "mistagged artist",
+      "i am too lazy to make tags right"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\13 - Candyman.mp3",
+    "OldGenres": "britpop",
+    "NewGenres": [
+      "britpop",
+      "halftime",
+      "sludge",
+      "doom metal"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\14 - State Troopers [Part I].mp3",
+    "OldGenres": "britpop",
+    "NewGenres": [
+      "britpop",
+      "rac",
+      "60s",
+      "coldwave"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cornershop\\1997 - When I Was Born for the 7th Time\\15 - Norwegian Wood (This Bird Has Flown).mp3",
+    "OldGenres": "britpop",
+    "NewGenres": [
+      "britpop",
+      "mistagged track",
+      "blues",
+      "russian"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\01_Country_Joe_and_the_Fish_-_Flying_High-OBSERVER.mp3",
+    "OldGenres": "1967;psychedelic;american",
+    "NewGenres": [
+      "1967",
+      "psychedelic",
+      "american"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\02_Country_Joe_and_the_Fish_-_Not_So_Sweet_Martha_Lorraine-OBSE.mp3",
+    "OldGenres": "1967;psychedelic;american",
+    "NewGenres": [
+      "1967",
+      "psychedelic",
+      "american"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\03_Country_Joe_and_the_Fish_-_Death_Sound-OBSERVER.mp3",
+    "OldGenres": "1967;psychedelic;american",
+    "NewGenres": [
+      "1967",
+      "psychedelic",
+      "american"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\04_Country_Joe_and_the_Fish_-_Porpoise_Mouth-OBSERVER.mp3",
+    "OldGenres": "1967;psychedelic;american",
+    "NewGenres": [
+      "1967",
+      "psychedelic",
+      "american"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\05_Country_Joe_and_the_Fish_-_Section_43-OBSERVER.mp3",
+    "OldGenres": "1967;psychedelic;american",
+    "NewGenres": [
+      "1967",
+      "psychedelic",
+      "american"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\06_Country_Joe_and_the_Fish_-_Super_Bird-OBSERVER.mp3",
+    "OldGenres": "1967;psychedelic;american",
+    "NewGenres": [
+      "1967",
+      "psychedelic",
+      "american"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\07_Country_Joe_and_the_Fish_-_Sad_and_Lonely_Times-OBSERVER.mp3",
+    "OldGenres": "1967;psychedelic;american",
+    "NewGenres": [
+      "1967",
+      "psychedelic",
+      "american"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\08_Country_Joe_and_the_Fish_-_Love-OBSERVER.mp3",
+    "OldGenres": "1967;psychedelic;american",
+    "NewGenres": [
+      "1967",
+      "psychedelic",
+      "american"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\09_Country_Joe_and_the_Fish_-_Bass_Strings-OBSERVER.mp3",
+    "OldGenres": "1967;psychedelic;american",
+    "NewGenres": [
+      "1967",
+      "psychedelic",
+      "american"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\10_Country_Joe_and_the_Fish_-_The_Masked_Marauder-OBSERVER.mp3",
+    "OldGenres": "1967;psychedelic;american",
+    "NewGenres": [
+      "1967",
+      "psychedelic",
+      "american"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Country_Joe_and_the_Fish_-_Electric_Music_for_Mind_and_Body-1967-OBSERVER\\11_Country_Joe_and_the_Fish_-_Grace-OBSERVER.mp3",
+    "OldGenres": "1967;psychedelic;american",
+    "NewGenres": [
+      "1967",
+      "psychedelic",
+      "american"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\01_Count_Basie_-_The_Kid_from_Red_Bank.-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\02_Count_Basie_-_Duet.-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\03_Count_Basie_-_After_Supper.-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\04_Count_Basie_-_Flight_of_the_Foo_Birds.-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\05_Count_Basie_-_Double-O.-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\06_Count_Basie_-_Teddy_the_Toad.-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\07_Count_Basie_-_Whirly-Bird.-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\08_Count_Basie_-_Midnite_Blue.-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\09_Count_Basie_-_Splanky.-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\10_Count_Basie_-_Fantail.-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\11_Count_Basie_-_Lil_Darlin.-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\12_Count_Basie_-_Silks_and_Satins_(Bonustrack).-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\13_Count_Basie_-_Sleepwalkers_Serenade_(Alternative_Take)_Bonustrack.-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\14_Count_Basie_-_Sleepwalkers_Serenade_(Bonustrack).-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\15_Count_Basie_-_The_Late_Late_Show_(Bonustrack).-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Count_Basie_-_The_Complete_Atomic_Basie-1994-OBSERVER\\16_Count_Basie_-_The_Late_Late_Show_(Vocal_Version)_Bonustrack.-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cowboy_Junkies_-_The_Trinity_Sessions-1988-OBSERVER\\01_Cowboy_Junkies_-_Mining_for_Gold-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cowboy_Junkies_-_The_Trinity_Sessions-1988-OBSERVER\\02_Cowboy_Junkies_-_Misguided_Angel-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cowboy_Junkies_-_The_Trinity_Sessions-1988-OBSERVER\\03_Cowboy_Junkies_-_Blue_Moon_Revisited_(Song_for_Elvis)-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cowboy_Junkies_-_The_Trinity_Sessions-1988-OBSERVER\\04_Cowboy_Junkies_-_I_Dont_Get_it-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cowboy_Junkies_-_The_Trinity_Sessions-1988-OBSERVER\\05_Cowboy_Junkies_-_Im_So_Lonesome_I_Could_Cry-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cowboy_Junkies_-_The_Trinity_Sessions-1988-OBSERVER\\06_Cowboy_Junkies_-_To_Love_is_to_Bury-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cowboy_Junkies_-_The_Trinity_Sessions-1988-OBSERVER\\07_Cowboy_Junkies_-_200_More_Miles-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cowboy_Junkies_-_The_Trinity_Sessions-1988-OBSERVER\\08_Cowboy_Junkies_-_Dreaming_My_Dreams_with_You-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cowboy_Junkies_-_The_Trinity_Sessions-1988-OBSERVER\\09_Cowboy_Junkies_-_Working_on_A_Building-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cowboy_Junkies_-_The_Trinity_Sessions-1988-OBSERVER\\10_Cowboy_Junkies_-_Sweet_Jane-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cowboy_Junkies_-_The_Trinity_Sessions-1988-OBSERVER\\11_Cowboy_Junkies_-_Postcard_Blues-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cowboy_Junkies_-_The_Trinity_Sessions-1988-OBSERVER\\12_Cowboy_Junkies_-_Walkin_After_Midnight-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cream_-_Disraeli_Gears-1967-OBSERVER\\01_Cream_-_Strange_Brew-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cream_-_Disraeli_Gears-1967-OBSERVER\\02_Cream_-_Sunshine_of_Your_Love-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cream_-_Disraeli_Gears-1967-OBSERVER\\03_Cream_-_World_of_Pain-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cream_-_Disraeli_Gears-1967-OBSERVER\\04_Cream_-_Dance_the_Night_Away-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cream_-_Disraeli_Gears-1967-OBSERVER\\05_Cream_-_Blue_Condition-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cream_-_Disraeli_Gears-1967-OBSERVER\\06_Cream_-_Tales_of_Brave_Ulysses-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cream_-_Disraeli_Gears-1967-OBSERVER\\07_Cream_-_Swlabr-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cream_-_Disraeli_Gears-1967-OBSERVER\\08_Cream_-_Were_Going_Wrong-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cream_-_Disraeli_Gears-1967-OBSERVER\\09_Cream_-_Outside_Woman_Blues-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cream_-_Disraeli_Gears-1967-OBSERVER\\10_Cream_-_Take_it_Back-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Cream_-_Disraeli_Gears-1967-OBSERVER\\11_Cream_-_Mothers_Lament-OBSERVER.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\01_Frank_Sinatra_-_In_the_Wee_Small_Hours_of_the_Morning..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\02_Frank_Sinatra_-_Mood_Indigo..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\03_Frank_Sinatra_-_Glad_to_Be_Unhappy..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\04_Frank_Sinatra_-_I_Get_Along_Without_You_Very_Well..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\05_Frank_Sinatra_-_Deep_in_A_Dream..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\06_Frank_Sinatra_-_I_See_Your_Face_Before_Me..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\07_Frank_Sinatra_-_Cant_We_Be_Friends_..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\08_Frank_Sinatra_-_When_Your_Lover_Has_Gone..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\09_Frank_Sinatra_-_What_is_this_Thing_Called_Love..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\10_Frank_Sinatra_-_Last_Night_When_We_Were_Young..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\11_Frank_Sinatra_-_Ill_Be_Around..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\12_Frank_Sinatra_-_Ill_Wind..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\13_Frank_Sinatra_-_It_Never_Entered_My_Mind..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\14_Frank_Sinatra_-_Dancing_on_the_Ceiling..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\15_Frank_Sinatra_-_Ill_Never_Be_the_Same..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Frank_Sinatra_-_In_the_Wee_Small_Hours-1991-OBSERVER\\16_Frank_Sinatra_-_This_Love_of_Mine..mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\01 - Dealing With The Devil.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\02 - Diggin' My Potatoes.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\03 - Don't Start Me Talkin'.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\04 - Feelin' Good.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\05 - Fore Day Blues.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\06 - Good Time Charlie.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\07 - Jelly Jelly.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\08 - Knock On Wood.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\09 - Off The Wall.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [
+      "rock",
+      "blues",
+      "classic",
+      "modern",
+      "punk",
+      "swedish punk",
+      "post-hardcore"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\10 - Oh Why (I Need You So Bad).mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [
+      "rock",
+      "blues",
+      "classic",
+      "modern",
+      "experimental",
+      "noise",
+      "metal"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\11 - Polly Put The Kettle On.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [
+      "rock",
+      "blues",
+      "classic",
+      "modern",
+      "electronic",
+      "korean",
+      "ambient"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\12 - So Glad You're Mine.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [
+      "rock",
+      "blues",
+      "classic",
+      "modern",
+      "lo-fi",
+      "mistagged artist",
+      "i am too lazy to make tags right"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\13 - South Side Boogie.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [
+      "rock",
+      "blues",
+      "classic",
+      "modern",
+      "halftime",
+      "sludge",
+      "doom metal"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\14 - Sweet Sixteen.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [
+      "rock",
+      "blues",
+      "classic",
+      "modern",
+      "rac",
+      "60s",
+      "coldwave"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\15 - The Creeper.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [
+      "rock",
+      "blues",
+      "classic",
+      "modern",
+      "mistagged track",
+      "russian"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\16 - There's Something On Your Mind.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [
+      "rock",
+      "blues",
+      "classic",
+      "modern",
+      "sludge",
+      "hardcore",
+      "sludge metal"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\17 - Turn On Your Love Life.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [
+      "rock",
+      "blues",
+      "classic",
+      "modern",
+      "swedish",
+      "hard rock"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\18 - V8 Ford Blues.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [
+      "rock",
+      "blues",
+      "classic",
+      "modern",
+      "metal",
+      "ambient"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\James Cotton\\2011 - Off The Wall\\19 - You Know It Ain't Right.mp3",
+    "OldGenres": "rock; blues; classic blues; modern blues; blues rock",
+    "NewGenres": [
+      "rock",
+      "blues",
+      "classic",
+      "modern",
+      "japanese",
+      "j-pop",
+      "folk"
+    ],
+    "Written": "dry-run"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\01 Chapter 1- Syncopation And Swing- Rhythm And Subdivision.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\02 Chapter 2- The Top Ten Two-Beat Figures.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\03 Chapter 3- Variations On The Top Ten.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\04 Chapter 4- Simple Four-Beat Figurs.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\05 Chapter 5- Introducing...Melody! Two Notes At A Time.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\06 Chapter 6- More Complex Four-Beat Figures.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\07 Chapter 7- _Why You Cryin_ The F Concert Blues_.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\08 Chapter 8- Variations - Pick-Up Notes Chapter 9- Bridge- Listen For The Music.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\09 Chapter 10- F Concert Pentatonic Blues Scale.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\10 Chapter 11- Licks Using Pickups.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\11 Chapter 12- F Concert Minor Blues Scale.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\12 Chapter 13- Variations - Triplets.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\13 Chapter 15- F Concert Minor Blues Scale.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\14 Chapter 16- Licks Using Triplets.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\15 Chapter 17- Two-Bar Licks.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\16 Chapter 18- Four-Bar Licks.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\17 Chapter 19- 12 Bars At A Time.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\18 Practice Grid #1- Two-Beat Figures.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\19 Practice Grid #2- Variations.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\20 Practice Grid #3- Four-Beat Figures.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\Rhythm First!\\21 Appendix B- Friff Omnibook.mp3",
+    "OldGenres": "contemporary jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\tester\\01_Frank_Sinatra_-_In_the_Wee_Small_Hours_of_the_Morning.-OBSERVER.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\tester\\08 - Knock On Wood.mp3",
+    "OldGenres": "rock",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\01 Hit the Road Jack.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\02 Love Me or Leave Me.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\03 Them There Eyes.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\04 Anything to Say You're Mine.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\05 Fidel.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\06 Theme for Doris.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\07 Trust in Me.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\08 I Hear Rhapsody.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\09 Body and Soul.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\10 At Last.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\100 That's Amore (Version originale remasterisÃ©e).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\11 Something to Live for.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\12 I've Got a Woman (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\13 A Fine Romance.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\14 Crazy He Calls Me.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\15 Lotus Flower.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\16 Minor Swing (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\17 Ain't Misbehavin'.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\18 How High the Moon.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\19 I Just Want to Make Love to You.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\20 Amazing Grace.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\21 Can't Get Out of This Mood.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\22 April in Paris.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\23 La vie en rose (Version Originale RemasterisÃ©e).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\24 Funky Mama.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\25 Cindy's Main Mood.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\26 Blue Moon.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\27 The Outlaw.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\28 Afrodisia.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\29 I Won't Dance (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\30 That Old Black Magic.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\31 For My Baby (Version originale remasterisÃ©e).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\32 Mood Indigo.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\33 Dream a Little Dream of Me.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\34 But Beautiful.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\35 The Rake.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\36 Somethin' Like Bags.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\37 Dancing in the Dark.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\38 Over the Rainbow.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\39 Summertime.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\40 Quizas Quizas Quizas (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\41 Samba De Orfeu.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\42 Come Fly With Me (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\43 Chilly Winds Don't Blow.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\44 Sweet Georgia Brown.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\45 C'est si bon (Version originale remasterisÃ©e).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\46 Cheek to Cheek.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\47 Unforgettable (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\48 Georgia On My Mind.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\49 Smoke Get in Your Eyes (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\50 Everybody Loves Somebody (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\51 Dreamy.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\52 Turnpike.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\53 Tears (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\54 Buffalo.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\55 You Go to My Head.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\56 Witchcraft (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\57 Meci Bon Dieu.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\58 Whisper Not.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\59 I Can't Give You Anything But Love.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\60 Smile (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\61 The More I See You.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\62 The Great Pretender (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\63 Cry Me a River (Version originale remasterisÃ©e).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\64 Cow Cow Boogie.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\65 Reaching Out.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\66 Lover Man.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\67 The Midnight Sun Never Sets.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\68 Don't Smoke in Bed.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\69 Mad About the Boy (Version originale remasterisÃ©e).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\70 I'm Getting Sentimental Over You.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\71 Don't Explain.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\72 My Funny Valentine.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\73 Lullaby of Birdland.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\74 Wrap Your Troubles in Dreams.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\75 A Fine Romance.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\76 Only You (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\77 'round About Midnight.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\78 Walkin' and Talkin'.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\79 Us Three.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\80 I'm Gonna Sit Right Down and Write Myself a Letter.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\81 Beyond the Sea.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\82 Sixteen Tons (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\83 Go Tell It On the Mountain.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\84 He's Got the Whole World in His Hands.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\85 But Not for Me.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\86 When I Fall in Love (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\87 I've Got You Under My Skin (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\88 Nobody Taught Me.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\89 Mess Around (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\90 Hello Dolly.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\91 Blues March.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\92 Speak Low.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\93 Lateef Minor 7th.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\94 Fine and Dandy.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\95 Velhos Tempos.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\96 The Masquerade Is Over.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\97 Sermonette.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\98 He's Got the Whole World in His Hands.mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  },
+  {
+    "AudioFile": "C:\\Users\\resto\\Music\\VA - 100 Jazz Essential Masterpieces (Frank Sinatra, Louis Armstrong, Nina Simone, Billie Holiday and Other Legends) - (2012)\\99 Hallelujah, I Love Her (Remastered Original Version).mp3",
+    "OldGenres": "jazz",
+    "NewGenres": [],
+    "Written": "no-tags"
+  }
+]

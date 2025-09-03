@@ -6,5 +6,5 @@
     Description = 'MusicPicturesDownloader public module that forwards to src/private implementations.'
     ModuleVersion = '0.1.0'
     PowerShellVersion = '5.1'
-    FunctionsToExport = @('Save-QArtistsImages','Save-QAlbumCover','Save-QTrackCover','Update-TrackGenresFromLastFm')
+    FunctionsToExport = @('Save-QArtistsImages','Save-QAlbumCover','Save-QTrackCover','Update-GenresForDirectory','Update-TrackGenresFromLastFm')
 }

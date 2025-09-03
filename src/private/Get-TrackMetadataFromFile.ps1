@@ -17,7 +17,7 @@ function Get-TrackMetadataFromFile {
     )
 
     process {
-        if (-not (Test-Path -Path $AudioFilePath)) {
+        if (-not (Test-Path -LiteralPath $AudioFilePath)) {
             throw "Audio file not found: $AudioFilePath"
         }
 
@@ -26,9 +26,11 @@ function Get-TrackMetadataFromFile {
             throw "ffprobe (part of ffmpeg) is required to read tags. Install ffmpeg and ensure 'ffprobe' is in PATH."
         }
 
-        $args = @('-v','quiet','-print_format','json','-show_format','-show_entries','format=tags','-i',$AudioFilePath)
+    # Request both format tags and streams so we can detect audio streams reliably
+    # Use -show_streams which reliably emits stream objects in ffprobe JSON
+        $ffprobeArgs = @('-v','quiet','-print_format','json','-show_format','-show_streams','-i',$AudioFilePath)
         try {
-            $raw = & ffprobe @args 2>&1
+            $raw = & ffprobe @ffprobeArgs 2>&1
         } catch {
             throw "ffprobe failed: $_"
         }
@@ -68,24 +70,34 @@ function Get-TrackMetadataFromFile {
                         }
                     }
                 }
-                return [PSCustomObject]@{ Title = $null; Album = $null; Artist = $null; Tags = $tags }
+                # Try to detect audio streams from the raw ffprobe output (fallback when JSON parse fails)
+                $audioCount = 0
+                try {
+                    $audioCount = ([regex]::Matches($text, '"codec_type"\s*:\s*"audio"', 'IgnoreCase')).Count
+                    if ($audioCount -eq 0) {
+                        # also attempt a looser match for stream lines if ffprobe output is not strict JSON
+                        $audioCount = ([regex]::Matches($text, 'Stream\s+#[^:]+:\s*Audio', 'IgnoreCase')).Count
+                    }
+                } catch { $audioCount = 0 }
+
+                return [PSCustomObject]@{ Title = $null; Album = $null; Artist = $null; Tags = $tags; audioCount = $audioCount }
             }
         }
 
-        # Build a case-insensitive hashtable of tags merging format and stream tags
+    # Build a case-insensitive hashtable of tags merging format and stream tags
         $tags = [hashtable]::new([System.StringComparer]::InvariantCultureIgnoreCase)
         if ($json.format -and $json.format.tags) {
             $ftags = $json.format.tags
             if ($ftags -is [System.Collections.IDictionary]) {
                 foreach ($k in $ftags.Keys) {
                     $name = $k.ToString().Trim()
-                    $value = ($ftags[$k] -ne $null) ? $ftags[$k].ToString().Trim() : $null
+                    $value = ($null -ne $ftags[$k]) ? $ftags[$k].ToString().Trim() : $null
                     if ($name.Length -gt 0 -and $name -ne '_empty' -and $value) { $tags[$name] = $value }
                 }
             } else {
                 $json.format.tags.PSObject.Properties | ForEach-Object {
                     $name = $_.Name.ToString().Trim()
-                    $value = ($_.Value -ne $null) ? $_.Value.ToString().Trim() : $null
+                    $value = ($null -ne $_.Value) ? $_.Value.ToString().Trim() : $null
                     if ($name.Length -gt 0 -and $name -ne '_empty' -and $value) { $tags[$name] = $value }
                 }
             }
@@ -97,7 +109,7 @@ function Get-TrackMetadataFromFile {
                     if ($st -is [System.Collections.IDictionary]) {
                         foreach ($k in $st.Keys) {
                             $name = $k.ToString().Trim()
-                            $value = ($st[$k] -ne $null) ? $st[$k].ToString().Trim() : $null
+                            $value = ($null -ne $st[$k]) ? $st[$k].ToString().Trim() : $null
                             if ($name.Length -gt 0 -and $name -ne '_empty' -and $value -and -not $tags.ContainsKey($name)) {
                                 $tags[$name] = $value
                             }
@@ -105,7 +117,7 @@ function Get-TrackMetadataFromFile {
                     } else {
                         $s.tags.PSObject.Properties | ForEach-Object {
                             $name = $_.Name.ToString().Trim()
-                            $value = ($_.Value -ne $null) ? $_.Value.ToString().Trim() : $null
+                            $value = ($null -ne $_.Value) ? $_.Value.ToString().Trim() : $null
                             if ($name.Length -gt 0 -and $name -ne '_empty' -and $value -and -not $tags.ContainsKey($name)) {
                                 $tags[$name] = $value
                             }
@@ -126,6 +138,22 @@ function Get-TrackMetadataFromFile {
             return $null
         }
 
+        # Normalize common tag key variants to canonical names
+        try {
+            # remove any blank-name tag entries which sometimes appear in ffprobe output
+            if ($tags.ContainsKey('')) { $null = $tags.Remove('') }
+            if ($tags.ContainsKey('_empty')) { $null = $tags.Remove('_empty') }
+
+            # map album_artist / album-artist / "album artist" -> albumartist
+            $albumAliases = @('album_artist','album-artist','album artist')
+            foreach ($a in $albumAliases) {
+                if ($tags.ContainsKey($a) -and -not $tags.ContainsKey('albumartist')) {
+                    $tags['albumartist'] = $tags[$a]
+                }
+                if ($tags.ContainsKey($a)) { $null = $tags.Remove($a) }
+            }
+        } catch { }
+
         # Common candidate keys (cover ID3v2 frames and common names)
         $titleKeys = @('title','TIT2','TITLE')
         $albumKeys = @('album','TALB','ALBUM')
@@ -140,11 +168,42 @@ function Get-TrackMetadataFromFile {
         if (-not $album) { $album = $null }
         if (-not $artist) { $artist = $null }
 
+        # Count audio streams (if available) so callers can skip non-audio files
+        $audioCount = 0
+        try {
+            if ($json -and $json.streams) {
+                $audioCount = ($json.streams | Where-Object { $_.codec_type -eq 'audio' }).Count
+            }
+        } catch { $audioCount = 0 }
+
+        # If audioCount is zero, try a fast, robust ffprobe text query as a last-resort
+        # (this mirrors the command you provided which is tolerant of odd JSON output)
+        if ($audioCount -le 0) {
+            try {
+                $probeArgs = @('-v','error','-show_entries','stream=codec_type','-of','default=noprint_wrappers=1:nokey=1',$AudioFilePath)
+                $probeOut = & ffprobe @probeArgs 2>&1
+                if ($probeOut) {
+                    $audioMatches = ([regex]::Matches($probeOut -join "`n", 'audio', 'IgnoreCase')).Count
+                    if ($audioMatches -gt 0) { $audioCount = $audioMatches }
+                }
+            } catch {
+                # ignore probe fallback errors
+            }
+        }
+
+        # Verbose diagnostic: show audioCount and key tag names (and albumartist if present)
+        Write-Verbose ([string]::Format('Get-TrackMetadataFromFile: audioCount={0}; tags={1}; albumartist={2}',
+            $audioCount,
+            ($tags.Keys -join ','),
+            ($tags.ContainsKey('albumartist') ? $tags['albumartist'] : '<none>')
+        ))
+
         return [PSCustomObject]@{
             Title = $title
             Album = $album
             Artist = $artist
             Tags = $tags
+            audioCount = $audioCount
         }
     }
 }

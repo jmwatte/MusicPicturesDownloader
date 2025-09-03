@@ -69,33 +69,67 @@ function Get-LastFmTopTags {
     $results = @()
     $base = 'http://ws.audioscrobbler.com/2.0/'
 
+    function Invoke-LastFm([hashtable]$q) {
+        $pairs = $q.GetEnumerator() | ForEach-Object { "$($_.Key)=$([uri]::EscapeDataString($_.Value))" }
+        $url = $base + '?' + ($pairs -join '&')
+        Write-Verbose "Last.fm request: $($q.method) -> $url"
+        try {
+            $resp = Invoke-RestMethod -Uri $url -Method Get -ErrorAction Stop
+            Write-Verbose "Last.fm response received (method=$($q.method))"
+        } catch {
+            Write-Verbose "Last.fm request failed (method=$($q.method)): $_"
+            $resp = $null
+        }
+        if ($resp -and $PSBoundParameters.ContainsKey('ApiKey') -ne $null) {
+            # nothing
+        }
+        # when verbose, also write raw response to temp for debugging
+        if ($resp -and $VerbosePreference -ne 'SilentlyContinue') {
+            try {
+                $tmp = Join-Path -Path $env:TEMP -ChildPath ("lastfm-" + [guid]::NewGuid().ToString() + '.json')
+                $resp | ConvertTo-Json -Depth 10 | Set-Content -Path $tmp -Encoding UTF8
+                Write-Verbose "Saved Last.fm raw response to $tmp"
+            } catch { Write-Verbose "Failed to save raw Last.fm response: $_" }
+        }
+        return $resp
+    }
+
+    function Extract-TagsFromResp($resp) {
+        if (-not $resp) { return @() }
+        # Last.fm may return a single tag object or an array; handle both
+        if ($resp.toptags -and $resp.toptags.tag) {
+            $tagNode = $resp.toptags.tag
+            if ($tagNode -is [System.Array]) {
+                return $tagNode | ForEach-Object { if ($_.name) { $_.name } elseif ($_.Name) { $_.Name } else { $_ } }
+            } else {
+                # single object
+                if ($tagNode.name) { return ,$tagNode.name }
+                if ($tagNode.Name) { return ,$tagNode.Name }
+                return ,$tagNode
+            }
+        }
+        return @()
+    }
+
     # Try track.getTopTags when track+artist provided
     if ($Track -and $Artist) {
-    $q = @{ method='track.gettoptags'; artist=$Artist; track=$Track; api_key=$ApiKey; format='json' }
-    $pairs = $q.GetEnumerator() | ForEach-Object { "$($_.Key)=$([uri]::EscapeDataString($_.Value))" }
-    $url = $base + '?' + ($pairs -join '&')
-    try { $resp = Invoke-RestMethod -Uri $url -Method Get -ErrorAction Stop } catch { $resp = $null }
-        if ($resp -and $resp.toptags -and $resp.toptags.tag) {
-            $resp.toptags.tag | ForEach-Object { $results += $_.name }
-        }
+        $q = @{ method='track.gettoptags'; artist=$Artist; track=$Track; api_key=$ApiKey; format='json' }
+        $resp = Invoke-LastFm -q $q
+        $results += (Extract-TagsFromResp $resp)
     }
 
     # If no track tags, try album
     if (($results.Count -eq 0) -and $Album -and $Artist) {
-    $q = @{ method='album.gettoptags'; artist=$Artist; album=$Album; api_key=$ApiKey; format='json' }
-    $pairs = $q.GetEnumerator() | ForEach-Object { "$($_.Key)=$([uri]::EscapeDataString($_.Value))" }
-    $url = $base + '?' + ($pairs -join '&')
-    try { $resp = Invoke-RestMethod -Uri $url -Method Get -ErrorAction Stop } catch { $resp = $null }
-        if ($resp -and $resp.toptags -and $resp.toptags.tag) { $resp.toptags.tag | ForEach-Object { $results += $_.name } }
+        $q = @{ method='album.gettoptags'; artist=$Artist; album=$Album; api_key=$ApiKey; format='json' }
+        $resp = Invoke-LastFm -q $q
+        $results += (Extract-TagsFromResp $resp)
     }
 
     # Fallback: artist.getTopTags
     if ($results.Count -eq 0 -and $Artist) {
-    $q = @{ method='artist.gettoptags'; artist=$Artist; api_key=$ApiKey; format='json' }
-    $pairs = $q.GetEnumerator() | ForEach-Object { "$($_.Key)=$([uri]::EscapeDataString($_.Value))" }
-    $url = $base + '?' + ($pairs -join '&')
-    try { $resp = Invoke-RestMethod -Uri $url -Method Get -ErrorAction Stop } catch { $resp = $null }
-        if ($resp -and $resp.toptags -and $resp.toptags.tag) { $resp.toptags.tag | ForEach-Object { $results += $_.name } }
+        $q = @{ method='artist.gettoptags'; artist=$Artist; api_key=$ApiKey; format='json' }
+        $resp = Invoke-LastFm -q $q
+        $results += (Extract-TagsFromResp $resp)
     }
 
     # normalize and return top N
