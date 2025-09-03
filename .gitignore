@@ -1,0 +1,8 @@
+# Basic ignores
+bin/
+obj/
+node_modules/
+*.log
+
+# Local secrets
+lastFMKeys.json

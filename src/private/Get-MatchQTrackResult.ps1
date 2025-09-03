@@ -39,7 +39,7 @@ function Get-MatchQTrackResult {
     $candArtistTokens = if ($candArtist) { $candArtist -split ' ' } else { @() }
     $candAlbumTokens = if ($candAlbum) { $candAlbum -split ' ' } else { @() }
 
-    function HybridSimilarity($a, $b) {
+    function Measure-HybridSimilarity($a, $b) {
         if (-not $a -or -not $b) { return 0 }
         $setA = [System.Collections.Generic.HashSet[string]]::new([string[]]$a)
         $setB = [System.Collections.Generic.HashSet[string]]::new([string[]]$b)
@@ -54,9 +54,9 @@ function Get-MatchQTrackResult {
         return [double]$inter.Count / $union.Count
     }
 
-    $trackScore = HybridSimilarity $reqTrackTokens $candTitleTokens
-    $artistScore = if ($reqArtistTokens.Count -gt 0) { HybridSimilarity $reqArtistTokens $candArtistTokens } else { 0 }
-    $albumScore = HybridSimilarity $reqTrackTokens $candAlbumTokens
+    $trackScore = Measure-HybridSimilarity $reqTrackTokens $candTitleTokens
+    $artistScore = if ($reqArtistTokens.Count -gt 0) { Measure-HybridSimilarity $reqArtistTokens $candArtistTokens } else { 0 }
+    $albumScore = Measure-HybridSimilarity $reqTrackTokens $candAlbumTokens
 
     # Weighting: track > artist > album
     $score = ($trackScore * 0.8) + ($artistScore * 0.15) + ($albumScore * 0.05)

@@ -39,7 +39,7 @@
 
 .PARAMETER NoAuto
     When specified, do NOT automatically download the top-scoring candidate; by default the
-    function will download the best match when it meets the -Threshold. Use this switch to
+    funct will download the best match when it meets the -Threshold. Use this switch to
     perform a preview/report-only run.
 
 .PARAMETER Threshold

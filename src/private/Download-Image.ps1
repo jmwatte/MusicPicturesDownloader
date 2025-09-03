@@ -3,7 +3,7 @@
 .SYNOPSIS
 Downloads an image URL to the destination folder.
 #>
-function Download-Image {
+function Save-Image {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]

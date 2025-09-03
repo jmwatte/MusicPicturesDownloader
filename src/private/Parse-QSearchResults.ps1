@@ -2,7 +2,7 @@
 .SYNOPSIS
 Parses Qobuz album search HTML and extracts candidate album cover entries using PowerHTML and XPath.
 #>
-function Parse-QSearchResults {
+function ConvertFrom-QSearchResults {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
