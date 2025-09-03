@@ -12,7 +12,8 @@ function Update-TrackGenresFromLastFm {
         [int] $MaxTags = 3,
         [ValidateSet('lower','camel','title')] [string] $Case = 'lower',
         [string] $Joiner = ';',
-        [switch] $Replace,
+    [switch] $Replace,
+    [switch] $Merge,
         [switch] $DryRun,
         [string] $ApiKey
     )
@@ -31,10 +32,32 @@ function Update-TrackGenresFromLastFm {
     Write-Output "Found genres: $genresStr"
     if ($DryRun) { Write-Output "Dry-run: not writing tags"; return @{ AudioFile=$AudioFilePath; Genres=$norm; Written='dry-run' } }
 
-    $res = Set-FileGenresWithFFmpeg -AudioFilePath $AudioFilePath -Genres $norm -Replace:$Replace
+    # If Merge requested (or not Replace), combine existing genres and new ones
+    if ($Merge -or -not $Replace) {
+        # read existing genres from file
+        $existing = $null
+        try { $existingMeta = Get-TrackMetadataFromFile -AudioFilePath $AudioFilePath -ErrorAction SilentlyContinue } catch { $existingMeta = $null }
+        if ($existingMeta -and $existingMeta.Tags -and $existingMeta.Tags.ContainsKey('genre')) {
+            $existing = ($existingMeta.Tags['genre'] -as [string]) -split '[;\s]+' | Where-Object { $_ -ne '' }
+        } else { $existing = @() }
+
+        # merge preserving order: existing first, then new ones not already present
+        $merged = @()
+        foreach ($g in $existing) { if ($g -and -not ($merged -contains $g)) { $merged += $g } }
+        foreach ($g in $norm) { if ($g -and -not ($merged -contains $g)) { $merged += $g } }
+
+        # normalize and trim merged list
+        $final = $merged | ForEach-Object { $_.ToString().Trim() } | Where-Object { $_ -ne '' }
+
+        $res = Set-FileGenresWithFFmpeg -AudioFilePath $AudioFilePath -Genres $final -Replace:$true
+    } else {
+        $res = Set-FileGenresWithFFmpeg -AudioFilePath $AudioFilePath -Genres $norm -Replace:$true
+    }
     if ($res -and $res.Ok) {
         # Provide a concise verbose summary: file: <file> old genre:<old> new genre:<new>
-        $old = $res.OldGenres -join $Joiner
+    $old = @()
+    if ($res.OldGenres) { $old = $res.OldGenres }
+    $old = $old -join $Joiner
         if (-not $old) { $old = '<none>' }
         $new = $norm -join $Joiner
         Write-Verbose ("file: {0} old genre:{1} new genre:{2}" -f $AudioFilePath, $old, $new)
