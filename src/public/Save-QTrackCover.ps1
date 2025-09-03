@@ -84,7 +84,9 @@ function Save-QTrackCover {
         [string]$Album,
         [Parameter(ParameterSetName='ByFile')]
         [string]$AudioFilePath,
-        [string]$DestinationFolder,
+    [string]$DestinationFolder,
+    [ValidateSet('230','600','max')]
+    [string]$Size = '230',
         [switch]$Embed,
         [ValidateSet('Always', 'IfBigger', 'SkipIfExists')]
         [string]$DownloadMode = 'Always',
@@ -188,9 +190,9 @@ function Save-QTrackCover {
             $best = $scored[0].Candidate
             $imgUrl = $best.ImageUrl
             if ($imgUrl -match '_\d+\.jpg$') {
-                $imgUrl = $imgUrl -replace '_\d+\.jpg$', ('_{0}.jpg' -f '230')
+                $imgUrl = $imgUrl -replace '_\d+\.jpg$', ('_{0}.jpg' -f $Size)
             } elseif ($imgUrl -match '_max\.jpg$') {
-                $imgUrl = $imgUrl -replace '_max\.jpg$', ('_{0}.jpg' -f '230')
+                $imgUrl = $imgUrl -replace '_max\.jpg$', ('_{0}.jpg' -f $Size)
             }
             Write-Verbose ("[Save-QTrackCover] Auto mode: Downloading best candidate with score {0} and url {1}" -f $scored[0].Score, $imgUrl)
             # If embedding, download to a temporary folder since the file is not needed afterwards
