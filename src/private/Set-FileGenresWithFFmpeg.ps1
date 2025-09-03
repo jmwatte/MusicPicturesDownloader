@@ -10,14 +10,16 @@ function Set-FileGenresWithFFmpeg {
     $ffmpeg = Get-Command ffmpeg -ErrorAction SilentlyContinue
     if (-not $ffmpeg) { throw "ffmpeg is required to write tags. Ensure ffmpeg.exe is in PATH." }
 
-    $genresStr = $Genres -join '; '
+    # Join genres with ';' (no extra spaces) to match module defaults
+    $genresStr = $Genres -join ';'
     $temp = Join-Path -Path $env:TEMP -ChildPath (New-Guid).Guid
     New-Item -Path $temp -ItemType Directory -Force | Out-Null
     $out = Join-Path -Path $temp -ChildPath ([IO.Path]::GetFileName($AudioFilePath))
 
-    $metaArgs = @()
-    if ($Replace) { $metaArgs += ('-metadata','genre=' + $genresStr) } else { $metaArgs += ('-metadata','genre=' + $genresStr) }
+    # Build metadata args correctly: use '-metadata','genre=VALUE' as two separate args
+    $metaArgs = @('-metadata', "genre=$genresStr")
 
+    # Ensure output is the temp file path (ffmpeg was previously given the genre string incorrectly)
     $ffArgs = @('-y','-i',$AudioFilePath) + $metaArgs + @('-codec','copy',$out)
     $proc = & ffmpeg @ffArgs 2>&1
     if ($LASTEXITCODE -ne 0 -or -not (Test-Path $out)) {
@@ -25,13 +27,21 @@ function Set-FileGenresWithFFmpeg {
         throw "ffmpeg failed to write metadata: $proc"
     }
 
-    # replace original
+    # replace original and return previous genres if available
     try {
+        # capture old genres before replacing
+        $oldMeta = $null
+        try { $oldMeta = Get-TrackMetadataFromFile -AudioFilePath $AudioFilePath -ErrorAction SilentlyContinue } catch {}
+        $oldGenres = $null
+        if ($oldMeta -and $oldMeta.Tags) {
+            if ($oldMeta.Tags.ContainsKey('genre')) { $oldGenres = ,($oldMeta.Tags['genre'] -as [string]) -replace '\s*;\s*', ';' }
+            else { $oldGenres = $null }
+        }
+
         Move-Item -Path $out -Destination $AudioFilePath -Force
         Remove-Item -Path $temp -Recurse -Force -ErrorAction SilentlyContinue
+        return @{ Ok = $true; OldGenres = $oldGenres }
     } catch {
         throw "Failed to replace original file: $_"
     }
-
-    return $true
 }

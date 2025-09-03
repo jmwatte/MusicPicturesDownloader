@@ -25,26 +25,40 @@ function Get-LastFmTopTags {
     )
 
     if (-not $ApiKey) {
+        # 1) Prefer environment variable
         if ($env:LASTFM_API_KEY) { $ApiKey = $env:LASTFM_API_KEY }
         else {
-            # Try a few common locations for lastFMKeys.json: script path, current dir, and parents
+            # 2) Walk upward from a sensible starting folder (PSScriptRoot / MyInvocation / cwd)
             $candidates = @()
-            # script path based candidate
-            try { if ($MyInvocation -and $MyInvocation.MyCommand.Path) { $p = Split-Path -Path $MyInvocation.MyCommand.Path -Parent; $candidates += (Join-Path -Path $p -ChildPath '..\..\lastFMKeys.json') } } catch {}
-            # current working dir and parents
-            try {
-                $dir = Get-Location
-                while ($dir -and ($candidates.Count -lt 8)) {
-                    $candidates += (Join-Path -Path $dir.Path -ChildPath 'lastFMKeys.json')
-                    $parent = Split-Path -Path $dir.Path -Parent
-                    if (-not $parent -or $parent -eq $dir.Path) { break }
-                    $dir = Get-Item -Path $parent
-                }
-            } catch {}
+            $start = $null
+            try { if ($PSScriptRoot) { $start = $PSScriptRoot } } catch {}
+            if (-not $start) {
+                try { if ($MyInvocation -and $MyInvocation.MyCommand.Path) { $start = Split-Path -Path $MyInvocation.MyCommand.Path -Parent } } catch {}
+            }
+            if (-not $start) { $start = (Get-Location).Path }
+
+            $dir = $start
+            while ($dir) {
+                $candidates += (Join-Path -Path $dir -ChildPath 'lastFMKeys.json')
+                $parent = Split-Path -Path $dir -Parent
+                if (-not $parent -or $parent -eq $dir) { break }
+                $dir = $parent
+            }
+
+            # also ensure we check current working directory explicitly
+            $cwd = (Get-Location).Path
+            if ($cwd -and -not ($candidates -contains (Join-Path $cwd 'lastFMKeys.json'))) { $candidates += (Join-Path $cwd 'lastFMKeys.json') }
 
             foreach ($cf in $candidates) {
                 if ($cf -and (Test-Path $cf)) {
-                    try { $j = Get-Content $cf -Raw | ConvertFrom-Json; if ($j.APIKey) { $ApiKey = $j.APIKey; break } } catch {}
+                    try {
+                        $j = Get-Content $cf -Raw | ConvertFrom-Json
+                        # accept various property name casings
+                        if ($j.APIKey -or $j.ApiKey -or $j.api_key) {
+                            $ApiKey = $j.APIKey ? $j.APIKey : ($j.ApiKey ? $j.ApiKey : $j.api_key)
+                            break
+                        }
+                    } catch {}
                 }
             }
         }
@@ -57,9 +71,10 @@ function Get-LastFmTopTags {
 
     # Try track.getTopTags when track+artist provided
     if ($Track -and $Artist) {
-        $q = @{ method='track.gettoptags'; artist=$Artist; track=$Track; api_key=$ApiKey; format='json' }
-        $url = $base + '?' + ($q.GetEnumerator() | ForEach-Object { "$($_.Key)=$([uri]::EscapeDataString($_.Value))" } -join '&')
-        try { $resp = Invoke-RestMethod -Uri $url -Method Get -ErrorAction Stop } catch { $resp = $null }
+    $q = @{ method='track.gettoptags'; artist=$Artist; track=$Track; api_key=$ApiKey; format='json' }
+    $pairs = $q.GetEnumerator() | ForEach-Object { "$($_.Key)=$([uri]::EscapeDataString($_.Value))" }
+    $url = $base + '?' + ($pairs -join '&')
+    try { $resp = Invoke-RestMethod -Uri $url -Method Get -ErrorAction Stop } catch { $resp = $null }
         if ($resp -and $resp.toptags -and $resp.toptags.tag) {
             $resp.toptags.tag | ForEach-Object { $results += $_.name }
         }
@@ -67,17 +82,19 @@ function Get-LastFmTopTags {
 
     # If no track tags, try album
     if (($results.Count -eq 0) -and $Album -and $Artist) {
-        $q = @{ method='album.gettoptags'; artist=$Artist; album=$Album; api_key=$ApiKey; format='json' }
-        $url = $base + '?' + ($q.GetEnumerator() | ForEach-Object { "$($_.Key)=$([uri]::EscapeDataString($_.Value))" } -join '&')
-        try { $resp = Invoke-RestMethod -Uri $url -Method Get -ErrorAction Stop } catch { $resp = $null }
+    $q = @{ method='album.gettoptags'; artist=$Artist; album=$Album; api_key=$ApiKey; format='json' }
+    $pairs = $q.GetEnumerator() | ForEach-Object { "$($_.Key)=$([uri]::EscapeDataString($_.Value))" }
+    $url = $base + '?' + ($pairs -join '&')
+    try { $resp = Invoke-RestMethod -Uri $url -Method Get -ErrorAction Stop } catch { $resp = $null }
         if ($resp -and $resp.toptags -and $resp.toptags.tag) { $resp.toptags.tag | ForEach-Object { $results += $_.name } }
     }
 
     # Fallback: artist.getTopTags
     if ($results.Count -eq 0 -and $Artist) {
-        $q = @{ method='artist.gettoptags'; artist=$Artist; api_key=$ApiKey; format='json' }
-        $url = $base + '?' + ($q.GetEnumerator() | ForEach-Object { "$($_.Key)=$([uri]::EscapeDataString($_.Value))" } -join '&')
-        try { $resp = Invoke-RestMethod -Uri $url -Method Get -ErrorAction Stop } catch { $resp = $null }
+    $q = @{ method='artist.gettoptags'; artist=$Artist; api_key=$ApiKey; format='json' }
+    $pairs = $q.GetEnumerator() | ForEach-Object { "$($_.Key)=$([uri]::EscapeDataString($_.Value))" }
+    $url = $base + '?' + ($pairs -join '&')
+    try { $resp = Invoke-RestMethod -Uri $url -Method Get -ErrorAction Stop } catch { $resp = $null }
         if ($resp -and $resp.toptags -and $resp.toptags.tag) { $resp.toptags.tag | ForEach-Object { $results += $_.name } }
     }
 

@@ -31,8 +31,13 @@ function Update-TrackGenresFromLastFm {
     Write-Output "Found genres: $genresStr"
     if ($DryRun) { Write-Output "Dry-run: not writing tags"; return @{ AudioFile=$AudioFilePath; Genres=$norm; Written='dry-run' } }
 
-    $ok = Set-FileGenresWithFFmpeg -AudioFilePath $AudioFilePath -Genres $norm -Replace:$Replace
-    if ($ok) {
+    $res = Set-FileGenresWithFFmpeg -AudioFilePath $AudioFilePath -Genres $norm -Replace:$Replace
+    if ($res -and $res.Ok) {
+        # Provide a concise verbose summary: file: <file> old genre:<old> new genre:<new>
+        $old = $res.OldGenres -join $Joiner
+        if (-not $old) { $old = '<none>' }
+        $new = $norm -join $Joiner
+        Write-Verbose ("file: {0} old genre:{1} new genre:{2}" -f $AudioFilePath, $old, $new)
         Write-Output @{ AudioFile=$AudioFilePath; Genres=$norm; Written=$AudioFilePath }
         return $true
     }
