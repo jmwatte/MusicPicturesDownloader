@@ -14,8 +14,9 @@ function Update-TrackGenresFromLastFm {
         [string] $Joiner = ';',
     [switch] $Replace,
     [switch] $Merge,
-        [switch] $DryRun,
-        [string] $ApiKey
+    [switch] $DryRun,
+    [switch] $ConfirmEach,
+    [string] $ApiKey
     )
 
     if (-not (Test-Path -LiteralPath $AudioFilePath)) { throw "Audio file not found: $AudioFilePath" }
@@ -48,11 +49,30 @@ function Update-TrackGenresFromLastFm {
 
         # normalize and trim merged list
         $final = $merged | ForEach-Object { $_.ToString().Trim() } | Where-Object { $_ -ne '' }
-
-        $res = Set-FileGenresWithFFmpeg -AudioFilePath $AudioFilePath -Genres $final -Replace:$true
     } else {
-        $res = Set-FileGenresWithFFmpeg -AudioFilePath $AudioFilePath -Genres $norm -Replace:$true
+        $final = $norm
     }
+
+    # Interactive per-file confirmation (if requested)
+    if ($ConfirmEach) {
+        # show existing genres (fresh read to show latest) and the new ones
+        $existing = @()
+        try { $existingMeta = Get-TrackMetadataFromFile -AudioFilePath $AudioFilePath -ErrorAction SilentlyContinue } catch { $existingMeta = $null }
+        if ($existingMeta -and $existingMeta.Tags -and $existingMeta.Tags.ContainsKey('genre')) {
+            $existing = ($existingMeta.Tags['genre'] -as [string]) -split '[;\s]+' | Where-Object { $_ -ne '' }
+        }
+        $oldStr = ($existing -join $Joiner)
+        if (-not $oldStr) { $oldStr = '<none>' }
+        $newStr = ($final -join $Joiner)
+        Write-Output ("About to write genres to file: {0}" -f $AudioFilePath)
+        Write-Output ("Existing: {0}" -f $oldStr)
+        Write-Output ("New: {0}" -f $newStr)
+        $ans = Read-Host -Prompt "Press Enter to write, 'n' to skip, 'q' to abort"
+        if ($ans -eq 'q') { Write-Output 'Aborted by user'; return $false }
+        if ($ans -eq 'n') { Write-Output @{ AudioFile=$AudioFilePath; Genres=$final; Written='skipped' }; return $true }
+    }
+
+    $res = Set-FileGenresWithFFmpeg -AudioFilePath $AudioFilePath -Genres $final -Replace:$true
     if ($res -and $res.Ok) {
         # Provide a concise verbose summary: file: <file> old genre:<old> new genre:<new>
     $old = @()

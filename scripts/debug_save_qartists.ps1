@@ -32,6 +32,7 @@ $TrackSplat=@{
 #Save-QArtistsImages @ArtistSplat
 
 #save-QTrackCover @TrackSplat
-Update-TrackGenresFromLastFm -AudioFilePath "D:\220 Greatest Old Songs [MP3-128 & 320kbps]\Green,Green Grass Of Home.MP3" -Merge
+Update-GenresForDirectory -Path 'D:\Buddy Rich - Take It Away (1968) [EAC-FLAC]' -AlbumArtistPolicy Smart -ThrottleSeconds 0 -Verbose -ConfirmEach
+#Update-TrackGenresFromLastFm -AudioFilePath "D:\220 Greatest Old Songs [MP3-128 & 320kbps]\Green,Green Grass Of Home.MP3" -Merge
 Write-Output "Done. Files in $DestinationPath :"
 #Get-ChildItem -Path $DestinationPath -ErrorAction SilentlyContinue | ForEach-Object { Write-Output $_.FullName }
