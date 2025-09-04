@@ -199,9 +199,9 @@ function Save-QTrackCover {
             if ($Embed) {
                 $tempDir = Join-Path -Path $env:TEMP -ChildPath (New-Guid).Guid
                 New-Item -Path $tempDir -ItemType Directory -Force | Out-Null
-                $local = Download-Image -ImageUrl $imgUrl -DestinationFolder $tempDir -DownloadMode $DownloadMode -FileNameStyle $FileNameStyle -CustomFileName $CustomFileName -Album $SearchTrack -Artist $SearchArtist
+                $local = Save-Image -ImageUrl $imgUrl -DestinationFolder $tempDir -DownloadMode $DownloadMode -FileNameStyle $FileNameStyle -CustomFileName $CustomFileName -Album $SearchTrack -Artist $SearchArtist
             } else {
-                $local = Download-Image -ImageUrl $imgUrl -DestinationFolder $DestinationFolder -DownloadMode $DownloadMode -FileNameStyle $FileNameStyle -CustomFileName $CustomFileName -Album $SearchTrack -Artist $SearchArtist
+                $local = Save-Image -ImageUrl $imgUrl -DestinationFolder $DestinationFolder -DownloadMode $DownloadMode -FileNameStyle $FileNameStyle -CustomFileName $CustomFileName -Album $SearchTrack -Artist $SearchArtist
             }
             $autoDownloaded = $true
         }

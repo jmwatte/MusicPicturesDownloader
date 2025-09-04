@@ -126,7 +126,7 @@ function Save-QAlbumCover {
                 $imgUrl = $imgUrl -replace '_max\.jpg$', ('_{0}.jpg' -f $Size)
             }
             Write-Verbose ("[Save-QAlbumCover] Auto mode: Downloading best candidate with score {0} and url {1}" -f $scored[0].Score, $imgUrl)
-            $local = Download-Image -ImageUrl $imgUrl -DestinationFolder $DestinationFolder -DownloadMode $DownloadMode -FileNameStyle $FileNameStyle -CustomFileName $CustomFileName -Album $Album -Artist $Artist
+            $local = Save-Image -ImageUrl $imgUrl -DestinationFolder $DestinationFolder -DownloadMode $DownloadMode -FileNameStyle $FileNameStyle -CustomFileName $CustomFileName -Album $Album -Artist $Artist
             $autoDownloaded = $true
         }
 
