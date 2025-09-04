@@ -19,7 +19,7 @@ function Set-TrackImageWithFFmpeg {
     $ffmpegPath = "ffmpeg"
     $tempOutput = [System.IO.Path]::GetTempFileName() + [System.IO.Path]::GetExtension($AudioFilePath)
     try {
-        if (Test-Path -Path $tempOutput) { Remove-Item -Path $tempOutput -Force }
+        if (Test-Path -LiteralPath $tempOutput) { Remove-Item -LiteralPath $tempOutput -Force }
         $ffmpegArgs = @(
             '-y',
             '-i', $AudioFilePath,
@@ -33,7 +33,7 @@ function Set-TrackImageWithFFmpeg {
             $tempOutput
         )
         $ffmpegResult = & $ffmpegPath @ffmpegArgs 2>&1
-        if (!(Test-Path -Path $tempOutput)) {
+        if (!(Test-Path -LiteralPath $tempOutput)) {
             Write-Output "FFmpeg failed to create output file. Output: $ffmpegResult"
             return $false
         }
@@ -42,7 +42,7 @@ function Set-TrackImageWithFFmpeg {
         return $true
     } catch {
         Write-Output "Failed to embed cover image with FFmpeg: $_"
-        if (Test-Path -Path $tempOutput) { Remove-Item -Path $tempOutput -Force }
+        if (Test-Path -LiteralPath $tempOutput) { Remove-Item -LiteralPath $tempOutput -Force }
         return $false
     }
 }

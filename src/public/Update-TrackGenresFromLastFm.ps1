@@ -18,7 +18,7 @@ function Update-TrackGenresFromLastFm {
         [string] $ApiKey
     )
 
-    if (-not (Test-Path $AudioFilePath)) { throw "Audio file not found: $AudioFilePath" }
+    if (-not (Test-Path -LiteralPath $AudioFilePath)) { throw "Audio file not found: $AudioFilePath" }
 
     $meta = Get-TrackMetadataFromFile -AudioFilePath $AudioFilePath
     Write-Verbose ("[Update-TrackGenresFromLastFm] Read tags: Title={0}, Album={1}, Artist={2}" -f $meta.Title, $meta.Album, $meta.Artist)

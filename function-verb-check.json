@@ -1,0 +1,206 @@
+[
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\Helpers\\LogHelper.ps1",
+    "Function": "Write-Log",
+    "Verb": "Write",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\scripts\\print_summary.ps1",
+    "Function": "Get-TagsFromFile",
+    "Verb": "Get",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Build-QSearchUrl.ps1",
+    "Function": "Build-QSearchUrl",
+    "Verb": "Build",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Build-QTrackSearchUrl.ps1",
+    "Function": "New-QTrackSearchUrl",
+    "Verb": "New",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\ConvertFrom-QTrackSearchResults.ps1",
+    "Function": "ConvertFrom-QTrackSearchResults",
+    "Verb": "ConvertFrom",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Download-Image.ps1",
+    "Function": "Save-Image",
+    "Verb": "Save",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Embed-ImageWithFFmpeg.ps1",
+    "Function": "Set-TrackImageWithFFmpeg",
+    "Verb": "Set",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Get-LastFmTopTags.ps1",
+    "Function": "Get-LastFmTopTags",
+    "Verb": "Get",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Get-LastFmTopTags.ps1",
+    "Function": "Invoke-LastFm",
+    "Verb": "Invoke",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Get-LastFmTopTags.ps1",
+    "Function": "Get-TagsFromResponse",
+    "Verb": "Get",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Get-MatchQResult.ps1",
+    "Function": "Get-MatchQResult",
+    "Verb": "Get",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Get-MatchQResult.ps1",
+    "Function": "Measure-HybridSimilarity",
+    "Verb": "Measure",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Get-MatchQResult.ps1",
+    "Function": "Measure-TokenOverlap",
+    "Verb": "Measure",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Get-MatchQTrackResult.ps1",
+    "Function": "Get-MatchQTrackResult",
+    "Verb": "Get",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Get-MatchQTrackResult.ps1",
+    "Function": "Measure-HybridSimilarity",
+    "Verb": "Measure",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Get-QSearchHtml.ps1",
+    "Function": "Get-QSearchHtml",
+    "Verb": "Get",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Get-QTrackSearchHtml.ps1",
+    "Function": "Get-QTrackSearchHtml",
+    "Verb": "Get",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Get-TrackMetadataFromFile.ps1",
+    "Function": "Get-TrackMetadataFromFile",
+    "Verb": "Get",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Get-TrackMetadataFromFile.ps1",
+    "Function": "Get-FirstTagValue",
+    "Verb": "Get",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Normalize-Genres.ps1",
+    "Function": "ConvertTo-Genres",
+    "Verb": "ConvertTo",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Normalize-Text.ps1",
+    "Function": "Convert-TextNormalized",
+    "Verb": "Convert",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Parse-QSearchResults.ps1",
+    "Function": "ConvertFrom-QSearchResults",
+    "Verb": "ConvertFrom",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Save-QobuzArtistImage.ps1",
+    "Function": "Save-QobuzArtistImage",
+    "Verb": "Save",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Save-QobuzItems.ps1",
+    "Function": "Save-QobuzItems",
+    "Verb": "Save",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Set-FileGenresWithFFmpeg.ps1",
+    "Function": "Set-FileGenresWithFFmpeg",
+    "Verb": "Set",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Set-TrackImageWithFFmpeg.ps1",
+    "Function": "Set-TrackImageWithFFmpeg",
+    "Verb": "Set",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\private\\Write-SummaryLine.ps1",
+    "Function": "Write-SummaryLine",
+    "Verb": "Write",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\public\\Save-QAlbumCover.ps1",
+    "Function": "Save-QAlbumCover",
+    "Verb": "Save",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\public\\Save-QArtistsImages.ps1",
+    "Function": "Save-QArtistsImages",
+    "Verb": "Save",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\public\\Save-QTrackCover.ps1",
+    "Function": "Save-QTrackCover",
+    "Verb": "Save",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\public\\Update-GenresForDirectory.ps1",
+    "Function": "Update-GenresForDirectory",
+    "Verb": "Update",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\public\\Update-GenresForDirectory.ps1",
+    "Function": "Test-VariousArtistTag",
+    "Verb": "Test",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\public\\Update-GenresForDirectory.ps1",
+    "Function": "ConvertTo-NormalizedLookup",
+    "Verb": "ConvertTo",
+    "Approved": true
+  },
+  {
+    "File": "C:\\Users\\resto\\Documents\\PowerShell\\Modules\\MusicPicturesDownloader\\src\\public\\Update-TrackGenresFromLastFm.ps1",
+    "Function": "Update-TrackGenresFromLastFm",
+    "Verb": "Update",
+    "Approved": true
+  }
+]

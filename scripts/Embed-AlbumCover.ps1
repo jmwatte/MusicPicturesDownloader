@@ -42,7 +42,7 @@ Write-Output "Artist: $Artist"
 $tempDir = New-Item -ItemType Directory -Path ([System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), [System.Guid]::NewGuid().ToString()))
 try {
 	$coverPath = Save-QAlbumCover -Album $Album -Artist $Artist -DestinationFolder $tempDir.FullName -Size $Size -DownloadMode $DownloadMode -FileNameStyle $FileNameStyle -CustomFileName $CustomFileName -Auto -Verbose
-	if (-not $coverPath -or -not (Test-Path $coverPath)) {
+	if (-not $coverPath -or -not (Test-Path -LiteralPath$coverPath)) {
 		Write-Error "No cover image was downloaded."
 		return
 	}
@@ -65,7 +65,7 @@ try {
 	)
 	Write-Output "Embedding cover image using FFmpeg..."
 	$ffmpegResult = & $ffmpegPath @ffmpegArgs 2>&1
-	if (!(Test-Path -Path $tempOutput)) {
+	if (!(Test-Path -LiteralPath $tempOutput)) {
 		Write-Output "FFmpeg failed to create output file. Output: $ffmpegResult"
 		Remove-Item -Path $coverPath -ErrorAction SilentlyContinue
 		return

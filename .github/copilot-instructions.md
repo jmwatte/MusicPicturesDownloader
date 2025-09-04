@@ -21,6 +21,7 @@ Comment-Based Help: Use the standard comment-based help block (<# ... #>) to doc
 Robust Error Handling: Use try/catch/finally blocks to handle errors gracefully instead of relying on Write-Host or $?.
 
 Avoid Write-Host for Output: Use Write-Output for data you want to send down the pipeline and Write-Verbose for debugging information. Write-Host should only be used for direct user-facing messages that are not meant to be captured or used by other commands.
+Only use approved verbs in function names. Approved verbs help maintain consistency and clarity in your code. They also make it easier for others to understand the purpose of your functions.
 The command to see the list of approved verbs in PowerShell is:
 
 Get-Verb

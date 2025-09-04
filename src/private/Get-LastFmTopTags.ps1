@@ -68,7 +68,6 @@ function Get-LastFmTopTags {
 
     $results = @()
     $base = 'http://ws.audioscrobbler.com/2.0/'
-
     function Invoke-LastFm([hashtable]$q) {
         $pairs = $q.GetEnumerator() | ForEach-Object { "$($_.Key)=$([uri]::EscapeDataString($_.Value))" }
         $url = $base + '?' + ($pairs -join '&')
@@ -94,7 +93,7 @@ function Get-LastFmTopTags {
         return $resp
     }
 
-    function Extract-TagsFromResp($resp) {
+    function Get-TagsFromResponse($resp) {
         if (-not $resp) { return @() }
         # Last.fm may return a single tag object or an array; handle both
         if ($resp.toptags -and $resp.toptags.tag) {
@@ -115,21 +114,21 @@ function Get-LastFmTopTags {
     if ($Track -and $Artist) {
         $q = @{ method='track.gettoptags'; artist=$Artist; track=$Track; api_key=$ApiKey; format='json' }
         $resp = Invoke-LastFm -q $q
-        $results += (Extract-TagsFromResp $resp)
+    $results += (Get-TagsFromResponse $resp)
     }
 
     # If no track tags, try album
     if (($results.Count -eq 0) -and $Album -and $Artist) {
         $q = @{ method='album.gettoptags'; artist=$Artist; album=$Album; api_key=$ApiKey; format='json' }
         $resp = Invoke-LastFm -q $q
-        $results += (Extract-TagsFromResp $resp)
+    $results += (Get-TagsFromResponse $resp)
     }
 
     # Fallback: artist.getTopTags
     if ($results.Count -eq 0 -and $Artist) {
         $q = @{ method='artist.gettoptags'; artist=$Artist; api_key=$ApiKey; format='json' }
         $resp = Invoke-LastFm -q $q
-        $results += (Extract-TagsFromResp $resp)
+    $results += (Get-TagsFromResponse $resp)
     }
 
     # normalize and return top N

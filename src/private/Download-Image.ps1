@@ -21,7 +21,7 @@ function Save-Image {
     )
 
     process {
-        if (-not (Test-Path -Path $DestinationFolder)) { New-Item -Path $DestinationFolder -ItemType Directory -Force | Out-Null }
+        if (-not (Test-Path -LiteralPath $DestinationFolder)) { New-Item -LiteralPath $DestinationFolder -ItemType Directory -Force | Out-Null }
         # Determine file name based on style
         switch ($FileNameStyle) {
             'Folder' { $FileName = 'folder.jpg' } # literal string 'folder.jpg'
@@ -47,7 +47,7 @@ function Save-Image {
         $outPath = Join-Path $DestinationFolder $FileName
 
         # DownloadMode logic
-        if (Test-Path -Path $outPath -PathType Leaf -ErrorAction SilentlyContinue) {
+        if (Test-Path -LiteralPath $outPath -PathType Leaf -ErrorAction SilentlyContinue) {
             switch ($DownloadMode) {
                 'SkipIfExists' { return $outPath }
                 'IfBigger' {

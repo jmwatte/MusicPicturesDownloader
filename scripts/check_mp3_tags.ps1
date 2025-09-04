@@ -9,7 +9,7 @@ $ffprobe = Get-Command ffprobe -ErrorAction SilentlyContinue
 Write-Output "ffprobe found: $([bool]$ffprobe)"
 if (-not $ffprobe) { Write-Output "ffprobe not found; install FFmpeg and ensure ffprobe is in PATH."; exit 0 }
 foreach ($f in $files) {
- if (-not (Test-Path $f)) { Write-Output "MISSING|$f"; continue }
+ if (-not (Test-Path -LiteralPathte $f)) { Write-Output "MISSING|$f"; continue }
  $json = & ffprobe -v error -print_format json -show_entries format=tags -i "$f" 2>$null
  $tags = $null
  try { $tags = ($json | ConvertFrom-Json).format.tags } catch { }

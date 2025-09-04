@@ -16,19 +16,20 @@ function Update-GenresForDirectory {
     [int] $ThrottleSeconds = 1,
     [string] $LogFile,
     [string] $BackupFolder,
-    [switch] $NoOutput
+    [switch] $NoOutput,
+    [switch] $ConfirmEach
     )
 
-    if (-not (Test-Path -Path $Path)) { throw "Path not found: $Path" }
+    if (-not (Test-Path -LiteralPath $Path)) { throw "Path not found: $Path" }
 
-    $files = Get-ChildItem -Path $Path -Filter $Filter -File -ErrorAction Stop
-    if ($Recurse) { $files = Get-ChildItem -Path $Path -Filter $Filter -File -Recurse -ErrorAction Stop }
+    $files = Get-ChildItem -LiteralPath $Path -Filter $Filter -File -ErrorAction Stop
+    if ($Recurse) { $files = Get-ChildItem -LiteralPath $Path -Filter $Filter -File -Recurse -ErrorAction Stop }
 
     # Load cache as a hashtable so arbitrary string keys (with pipes/spaces) can be used
     $cache = @{}
-    if (Test-Path -Path $CacheFile) {
+    if (Test-Path -LiteralPath $CacheFile) {
         try {
-            $raw = Get-Content -Path $CacheFile -Raw -ErrorAction Stop
+            $raw = Get-Content -LiteralPath $CacheFile -Raw -ErrorAction Stop
             if ($raw -and $raw.Trim().Length -gt 0) {
                 $tmp = $raw | ConvertFrom-Json -ErrorAction Stop
                 if ($null -ne $tmp) {
@@ -48,7 +49,7 @@ function Update-GenresForDirectory {
     }
 
     # Normalize strings for lookup (remove bracketed parts, punctuation, collapse whitespace)
-    function NormalizeForLookup([string]$s) {
+    function ConvertTo-NormalizedLookup([string]$s) {
         if (-not $s) { return $null }
         $t = $s.ToLowerInvariant().Trim()
         # remove parenthetical or bracketed suffixes
@@ -135,9 +136,9 @@ function Update-GenresForDirectory {
 
     $album = $meta.Album
     $title = $meta.Title
-    $artistNorm = NormalizeForLookup($artist)
-    $albumNorm = NormalizeForLookup($album)
-    $titleNorm = NormalizeForLookup($title)
+    $artistNorm = ConvertTo-NormalizedLookup($artist)
+    $albumNorm = ConvertTo-NormalizedLookup($album)
+    $titleNorm = ConvertTo-NormalizedLookup($title)
         if (-not $artist -and -not $title -and -not $album) {
             Write-Verbose "Skipping (no artist/title/album): $($f.FullName)"
             $report += [PSCustomObject]@{ AudioFile=$f.FullName; OldGenres=$null; NewGenres=$null; Written='skipped' }
@@ -243,7 +244,26 @@ function Update-GenresForDirectory {
     # Diagnostic: when verbose, persist lookupResults to a workspace file for inspection
     if ($VerbosePreference -ne 'SilentlyContinue') {
         try {
-            $diag = Join-Path -Path (Get-Location) -ChildPath '.lastfm-diagnostic.json'
+            # Prefer writing diagnostics to a writable location to avoid permission errors
+            $diagDir = $null
+            $candidates = @()
+            if ($CacheFile) { $candidates += (Split-Path -Path $CacheFile -Parent) }
+            if ($env:TEMP) { $candidates += $env:TEMP }
+            foreach ($d in $candidates) {
+                if (-not $d) { continue }
+                if (-not (Test-Path -LiteralPath $d)) { continue }
+                try {
+                    # test if we can create and remove a temp file in the directory
+                    $testFile = [IO.Path]::Combine($d, [IO.Path]::GetRandomFileName())
+                    '' | Out-File -FilePath $testFile -Encoding UTF8 -Force
+                    Remove-Item -LiteralPath $testFile -Force
+                    $diagDir = $d
+                    break
+                } catch { }
+            }
+            if (-not $diagDir) { $diagDir = $env:TEMP }
+            if (-not $diagDir) { $diagDir = (Get-Location) }
+            $diag = Join-Path -Path $diagDir -ChildPath '.lastfm-diagnostic.json'
             $lookupResults | ConvertTo-Json -Depth 6 | Set-Content -Path $diag -Encoding UTF8
             Write-Verbose "Wrote diagnostic lookupResults to $diag"
         } catch { Write-Verbose "Failed to write diagnostic file: $_" }
@@ -289,10 +309,31 @@ function Update-GenresForDirectory {
             continue
         }
 
+        # Interactive confirmation per-file when requested
+        if ($ConfirmEach) {
+            $shortName = [IO.Path]::GetFileName($f.FullName)
+            $old = $null
+            if ($meta.Tags -and $meta.Tags.ContainsKey('genre')) { $old = ($meta.Tags['genre'] -as [string]) }
+            $newStr = ($final -join $Joiner)
+            Write-Host "Confirm: $shortName  ->  $newStr  (was: $old)" -NoNewline
+            Write-Host "  [Enter]=yes, n=skip, q=abort" -ForegroundColor DarkGray
+            $key = Read-Host -Prompt 'Choice'
+            if ($key -eq 'q') {
+                Write-Verbose "Operation aborted by user at $shortName"
+                return $report
+            }
+            if ($key -eq 'n') {
+                Write-Verbose "Skipping $shortName per user choice"
+                $report += [PSCustomObject]@{ AudioFile=$f.FullName; OldGenres=($meta.Tags['genre']); NewGenres=$final; Written='skipped-by-user' }
+                continue
+            }
+            # else proceed on Enter or any other input
+        }
+
         # optional backup: copy original to backup folder if specified
         if ($BackupFolder) {
             try {
-                if (-not (Test-Path -Path $BackupFolder)) { New-Item -Path $BackupFolder -ItemType Directory -Force | Out-Null }
+                if (-not (Test-Path -LiteralPath $BackupFolder)) { New-Item -Path $BackupFolder -ItemType Directory -Force | Out-Null }
                 Copy-Item -LiteralPath $f.FullName -Destination (Join-Path -Path $BackupFolder -ChildPath $f.Name) -Force
             } catch { Write-Warning ([string]::Format('Failed to backup {0} to {1}: {2}', $f.FullName, $BackupFolder, $_)) }
         }

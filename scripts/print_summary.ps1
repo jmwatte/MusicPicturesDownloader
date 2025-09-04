@@ -33,7 +33,7 @@ $inArtist = $Artist
 $inAlbum = $Album
 $inTitle = $Title
 if ($AudioFilePath) {
- if (-not (Test-Path $AudioFilePath)) {
+ if (-not (Test-Path -LiteralPath	$AudioFilePath)) {
   Write-Output "ERROR: Audio file not found: $AudioFilePath"
   exit 2
  }

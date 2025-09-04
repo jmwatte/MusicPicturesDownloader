@@ -45,7 +45,7 @@ function Save-QobuzArtistImage {
 	)
 
 	Begin {
-		if (-not (Test-Path -Path $DestinationFolder)) { New-Item -Path $DestinationFolder -ItemType Directory -Force | Out-Null }
+		if (-not (Test-Path -LiteralPath $DestinationFolder)) { New-Item -LiteralPath $DestinationFolder -ItemType Directory -Force | Out-Null }
 		$cleanArtist = Convert-TextNormalized $ArtistName
 		$searchUrl = 'https://www.qobuz.com/be-nl/search/artists/' + [System.Uri]::EscapeDataString($cleanArtist)
 		Write-Log -Message "Searching Qobuz: $searchUrl" -Level Verbose -Category Search
@@ -127,7 +127,7 @@ function Save-QobuzArtistImage {
 			$fileName = ($fileBase.Trim() + '.jpg')
 			$outPath = Join-Path -Path $DestinationFolder -ChildPath $fileName
 
-			if (Test-Path -Path $outPath -PathType Leaf -ErrorAction SilentlyContinue) {
+			if (Test-Path -LiteralPath $outPath -PathType Leaf -ErrorAction SilentlyContinue) {
 				if (-not $Force) { throw "File already exists: $outPath. Use -Force to overwrite." } else { Remove-Item -Path $outPath -Force -ErrorAction Stop }
 			}
 

@@ -17,9 +17,10 @@ function Set-FileGenresWithFFmpeg {
     $out = Join-Path -Path $temp -ChildPath ([IO.Path]::GetFileName($AudioFilePath))
 
     # Build metadata args correctly: use '-metadata','genre=VALUE' as two separate args
-    $metaArgs = @('-metadata', "genre=$genresStr")
+    # Also explicitly map metadata from the input (-map_metadata 0) so existing tags are preserved
+    $metaArgs = @('-map_metadata','0','-metadata', "genre=$genresStr")
 
-    # Ensure output is the temp file path (ffmpeg was previously given the genre string incorrectly)
+    # Ensure output is the temp file path and preserve existing metadata
     $ffArgs = @('-y','-i',$AudioFilePath) + $metaArgs + @('-codec','copy',$out)
     $proc = & ffmpeg @ffArgs 2>&1
     if ($LASTEXITCODE -ne 0 -or -not (Test-Path $out)) {

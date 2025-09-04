@@ -209,7 +209,7 @@ function Save-QTrackCover {
         if ($GenerateReport) {
             $ts = (Get-Date).ToString('yyyyMMddHHmmss')
             $reportPath = Join-Path ($DestinationFolder ? $DestinationFolder : $env:TEMP) "q_track_search_report_$ts.json"
-            if (-not (Test-Path -Path (Split-Path $reportPath -Parent))) { New-Item -Path (Split-Path $reportPath -Parent) -ItemType Directory -Force | Out-Null }
+            if (-not (Test-Path -LiteralPath (Split-Path $reportPath -Parent))) { New-Item -Path (Split-Path $reportPath -Parent) -ItemType Directory -Force | Out-Null }
             $report | ConvertTo-Json -Depth 4 | Out-File -FilePath $reportPath -Encoding UTF8
             Write-Verbose ("[Save-QTrackCover] Report written: {0}" -f $reportPath)
         }

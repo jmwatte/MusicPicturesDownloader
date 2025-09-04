@@ -133,7 +133,7 @@ function Save-QAlbumCover {
         if ($GenerateReport) {
             $ts = (Get-Date).ToString('yyyyMMddHHmmss')
             $reportPath = Join-Path $DestinationFolder "q_search_report_$ts.json"
-            if (-not (Test-Path -Path $DestinationFolder)) {
+            if (-not (Test-Path -LiteralPath $DestinationFolder)) {
                 New-Item -Path $DestinationFolder -ItemType Directory -Force | Out-Null
             }
             $report | ConvertTo-Json -Depth 4 | Out-File -FilePath $reportPath -Encoding UTF8

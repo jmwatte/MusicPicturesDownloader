@@ -9,14 +9,14 @@ param(
 )
 
 $baseDir = 'C:\temp\albums'
-if (-not (Test-Path -Path $baseDir)) { New-Item -Path $baseDir -ItemType Directory | Out-Null }
+if (-not (Test-Path -LiteralPath $baseDir)) { New-Item -LiteralPath $baseDir -ItemType Directory | Out-Null }
 
-Get-Content -Path $InputFile | ForEach-Object {
+Get-Content -LiteralPath $InputFile | ForEach-Object {
     if ($_ -match "^(.*?)\t(.*?)$") {
         $album = $matches[1].Trim()
         $artist = $matches[2].Trim()
         $albumDir = Join-Path $baseDir ("{0}-{1}" -f $album, $artist -replace '[\\/:*?"<>|]', '_')
-        if (-not (Test-Path -Path $albumDir)) { New-Item -Path $albumDir -ItemType Directory | Out-Null }
+        if (-not (Test-Path -LiteralPath $albumDir)) { New-Item -LiteralPath $albumDir -ItemType Directory | Out-Null }
         # Download album cover
 		$AlbumSplat = @{
 			Album = $album
@@ -28,7 +28,7 @@ Get-Content -Path $InputFile | ForEach-Object {
         Save-QAlbumCover @AlbumSplat
         # Download artist picture
         $artistPicDir = Join-Path $albumDir 'ArtistPicture'
-        if (-not (Test-Path -Path $artistPicDir)) { New-Item -Path $artistPicDir -ItemType Directory | Out-Null }
+        if (-not (Test-Path -LiteralPath $artistPicDir)) { New-Item -Path $artistPicDir -ItemType Directory | Out-Null }
 		$ArtistSplat = @{
 			ArtistInput = $artist
 			DestinationFolder = $artistPicDir
