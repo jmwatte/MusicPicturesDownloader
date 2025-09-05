@@ -4,7 +4,7 @@
         {
             "type": "PowerShell",
             "request": "launch",
-            "name": "Debug Save-QArtistsImages (The Beatles)",
+            "name": "Debug Save-QArtistsImages",
             "script": "${workspaceFolder}/scripts/debug_save_qartists.ps1",
             "args": [],
             "cwd": "${workspaceFolder}",

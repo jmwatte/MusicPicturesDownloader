@@ -21,7 +21,7 @@ function Save-Image {
     )
 
     process {
-        if (-not (Test-Path -LiteralPath $DestinationFolder)) { New-Item -LiteralPath $DestinationFolder -ItemType Directory -Force | Out-Null }
+        if (-not (Test-Path -LiteralPath $DestinationFolder)) { New-Item -Path $DestinationFolder -ItemType Directory -Force | Out-Null }
         # Determine file name based on style
         switch ($FileNameStyle) {
             'Folder' { $FileName = 'folder.jpg' } # literal string 'folder.jpg'

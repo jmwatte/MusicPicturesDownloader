@@ -45,7 +45,7 @@ function Save-QobuzArtistImage {
 	)
 
 	Begin {
-		if (-not (Test-Path -LiteralPath $DestinationFolder)) { New-Item -LiteralPath $DestinationFolder -ItemType Directory -Force | Out-Null }
+		if (-not (Test-Path -LiteralPath $DestinationFolder)) { New-Item -Path $DestinationFolder -ItemType Directory -Force | Out-Null }
 		$cleanArtist = Convert-TextNormalized $ArtistName
 		$searchUrl = 'https://www.qobuz.com/be-nl/search/artists/' + [System.Uri]::EscapeDataString($cleanArtist)
 		Write-Log -Message "Searching Qobuz: $searchUrl" -Level Verbose -Category Search

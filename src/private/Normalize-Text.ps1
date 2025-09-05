@@ -8,7 +8,17 @@ function Convert-TextNormalized {
         [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
         [string]$Text
     )
+
+
+
     process {
+		 # defensive HtmlDecode and string coercion before normalization
+        if ($null -ne $Text) {
+            Add-Type -AssemblyName System.Web -ErrorAction SilentlyContinue
+            $t = [System.Web.HttpUtility]::HtmlDecode(($Text -as [string]))
+        } else {
+            $t = ''
+        }
         $t = $Text.ToLowerInvariant()
         $t = [System.Text.RegularExpressions.Regex]::Replace($t, "\(.*?\)", '') # remove parentheses
         $t = [System.Text.RegularExpressions.Regex]::Replace($t, "[^\p{L}\p{Nd}\s]", '') # remove punctuation

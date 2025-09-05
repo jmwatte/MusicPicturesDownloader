@@ -57,7 +57,7 @@ function Save-QobuzItems {
         if ($ArtistInput -contains $DestinationFolder) {
             Write-Log -Message "DestinationFolder is in the input" -Level Debug -Category Bulk
         }
-        if (-not (Test-Path -LiteralPath $DestinationFolder)) { New-Item -LiteralPath $DestinationFolder -ItemType Directory -Force | Out-Null }
+        if (-not (Test-Path -LiteralPath $DestinationFolder)) { New-Item -Path $DestinationFolder -ItemType Directory -Force | Out-Null }
         Write-Log -Message "Bulk operation begin" -Level Debug -Category Bulk
         $results = @()
     }

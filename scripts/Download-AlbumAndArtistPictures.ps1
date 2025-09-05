@@ -9,14 +9,14 @@ param(
 )
 
 $baseDir = 'C:\temp\albums'
-if (-not (Test-Path -LiteralPath $baseDir)) { New-Item -LiteralPath $baseDir -ItemType Directory | Out-Null }
+if (-not (Test-Path -LiteralPath $baseDir)) { New-Item -Path $baseDir -ItemType Directory | Out-Null }
 
 Get-Content -LiteralPath $InputFile | ForEach-Object {
     if ($_ -match "^(.*?)\t(.*?)$") {
         $album = $matches[1].Trim()
         $artist = $matches[2].Trim()
         $albumDir = Join-Path $baseDir ("{0}-{1}" -f $album, $artist -replace '[\\/:*?"<>|]', '_')
-        if (-not (Test-Path -LiteralPath $albumDir)) { New-Item -LiteralPath $albumDir -ItemType Directory | Out-Null }
+        if (-not (Test-Path -LiteralPath $albumDir)) { New-Item -Path $albumDir -ItemType Directory | Out-Null }
         # Download album cover
 		$AlbumSplat = @{
 			Album = $album
