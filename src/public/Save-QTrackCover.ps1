@@ -162,7 +162,7 @@ function Save-QTrackCover {
 				# provide the search track so helper can find the matching track title in playerTracks
 				$candidates = Get-QobuzPageImageInfo -Url $CorrectUrl -PreferredSize $Size -MatchTrack $SearchTrack
 				# if we lack search fields, attempt to populate from candidate metadata
-				if (($SearchTrack -eq $null -or $SearchArtist -eq $null) -and $candidates -and $candidates.Count -gt 0) {
+				if (($null -eq $SearchTrack -or $null -eq $SearchArtist) -and $candidates -and $candidates.Count -gt 0) {
 					$first = $candidates[0]
 					if (-not $SearchTrack -and $first.TitleAttr) { $SearchTrack = $first.TitleAttr }
 					if (-not $SearchArtist -and $first.ArtistAttr) { $SearchArtist = $first.ArtistAttr }
@@ -248,31 +248,51 @@ function Save-QTrackCover {
 
 			if ($GenerateReport) {
 				
-
-
 				$ts = (Get-Date).ToString('yyyyMMddHHmmss')
 				# Determine report status: success when we auto-downloaded, failed when no candidates, otherwise no-download/candidates
-				if ($autoDownloaded) {
-					$status = 'success'
-				}
-				elseif ($scored.Count -eq 0) {
-					$status = 'failed'
-				}
-				elseif ($scored.Count -gt 0 -and $scored[0].Score -lt $Threshold) {
-					$status = 'no-download'
-				}
-				else {
-					$status = 'failed'
-				}
+				if ($autoDownloaded)   { $status = 'success' }
+				elseif ($scored.Count -eq 0) { $status = 'failed' }
+				elseif ($scored.Count -gt 0 -and $scored[0].Score -lt $Threshold) { $status = 'no-download' }
+				else { $status = 'failed' }
 
+				# Build enriched report object with diagnostics and simplified candidates
 				$fileName = ("q_track_search_{0}_{1}.json" -f $status, $ts)
 				$reportPath = Join-Path ($DestinationFolder ? $DestinationFolder : $env:TEMP) $fileName
 				if (-not (Test-Path -LiteralPath (Split-Path $reportPath -Parent))) {
 					New-Item -Path (Split-Path $reportPath -Parent) -ItemType Directory -Force | Out-Null
 				}
-				$report | ConvertTo-Json -Depth 4 | Out-File -FilePath $reportPath -Encoding UTF8
 
+				# Simplify candidate objects for the JSON report (avoid serializing complex types)
+				$simpleCandidates = @()
+				foreach ($r in $report) {
+					$simpleCandidates += [PSCustomObject]@{
+						Index    = $r.Index
+						ImageUrl = $r.ImageUrl
+						Title    = $r.Title
+						Artist   = $r.ResultArtist
+						Album    = $r.ResultAlbum
+						Score    = $r.Score
+						ResultLink = $r.ResultLink
+					}
+				}
 
+				# Recent error info if present
+				$lastErr = $null
+				if ($Error.Count -gt 0) { $lastErr = $Error[0] }
+
+				$fullReport = [PSCustomObject]@{
+					Status      = $status
+					Timestamp   = $ts
+					Input       = [PSCustomObject]@{ SearchTrack = $SearchTrack; SearchArtist = $SearchArtist; SearchAlbum = $SearchAlbum; AudioFile = $AudioFilePath }
+					Candidates  = $simpleCandidates
+					ReportItems = $report
+					Diagnostics = [PSCustomObject]@{
+						ErrorMessage = if ($lastErr) { $lastErr.Exception.Message } else { $null }
+						Exception    = if ($lastErr) { $lastErr.Exception.GetType().FullName } else { $null }
+						StackTrace   = if ($lastErr) { $lastErr.ScriptStackTrace } else { $null }
+					}
+				}
+				$fullReport | ConvertTo-Json -Depth 6 | Out-File -FilePath $reportPath -Encoding UTF8
 			}
 
 			if ($autoDownloaded) {
@@ -327,8 +347,57 @@ function Save-QTrackCover {
 			}
 		}
 		catch {
-			Write-Output "Error in Save-QTrackCover: $_"
-			return $null
-		}
-	}
-}
+			# Centralized diagnostics on exception: persist a minimal diagnostics JSON if report generation requested
+			$errMsg = $_.Exception.Message
+			Write-Verbose ("[Save-QTrackCover] Exception: {0}" -f $errMsg)
+			# attempt to persist diagnostics to same report folder
+			try {
+				$ts = (Get-Date).ToString('yyyyMMddHHmmss')
+				$status = 'failed'
+				$diagFile = Join-Path -Path ($DestinationFolder ? $DestinationFolder : $env:TEMP) -ChildPath ("q_track_search_failed_{0}.json" -f $ts)
+				# prepare simplified candidates if available
+				$simpleCandidates = $null
+				try {
+					if ($candidates) {
+						$simpleCandidates = @()
+						foreach ($c in $candidates) {
+							$simpleCandidates += [PSCustomObject]@{
+								ImageUrl = $c.ImageUrl
+								Title    = $c.TitleAttr
+								Artist   = $c.ArtistAttr
+								Album    = $c.AlbumAttr
+								ResultLink = $c.ResultLink
+							}
+						}
+					}
+				} catch {}
+
+				$diag = [PSCustomObject]@{
+					Status = $status
+					Timestamp = $ts
+					ErrorMessage = $errMsg
+					Exception = $_.Exception.GetType().FullName
+					StackTrace = $_.ScriptStackTrace
+					Input = [PSCustomObject]@{ SearchTrack = $SearchTrack; SearchArtist = $SearchArtist; AudioFile = $AudioFilePath }
+					Candidates = $simpleCandidates
+				}
+				$diag | ConvertTo-Json -Depth 6 | Out-File -FilePath $diagFile -Encoding UTF8
+				Write-Verbose ("[Save-QTrackCover] Wrote diagnostics to $diagFile")
+			} catch { Write-Verbose ("[Save-QTrackCover] Failed to write diagnostics file: {0}" -f $_) }
+
+			# Return diagnostic object for immediate inspection
+			$diagnostic = [PSCustomObject]@{
+				ErrorMessage = $errMsg
+				Exception    = $_.Exception
+				StackTrace   = $_.ScriptStackTrace
+				ReportPath   = if ($diagFile) { $diagFile } else { $null }
+				Candidates   = if ($simpleCandidates) { $simpleCandidates } else { $null }
+				SearchTrack  = $SearchTrack
+				SearchArtist = $SearchArtist
+				AudioFilePath= $AudioFilePath
+			}
+			Write-Output $diagnostic
+			return $diagnostic
+ 		}
+ 	}
+ }

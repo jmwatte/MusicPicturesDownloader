@@ -2,7 +2,7 @@
 Import-Module 'C:\Users\jmw\Documents\PowerShell\Modules\MusicPictureDownloader\MusicPicturesDownloader\MusicPicturesDownloader.psd1' -Force
 #$album = "Back in black"
 #$artist = "AC/DC"
-$filepath="D:\1000 Songs Every Rock Fan Should Know\0074 - The Beatles - I Want To Hold Your Hand (1963).mp3"
+$filepath="D:\1000 Songs Every Rock Fan Should Know\0093 - Willie Mae ''Big Mama'' Thornton - Hound Dog (1953).mp3"
 $DestinationPath = Join-Path $env:TEMP 'qobuz-debug'
 if (-not (Test-Path -LiteralPath $DestinationPath)) { New-Item -Path $DestinationPath -ItemType Directory -Force | Out-Null }
 
@@ -30,7 +30,7 @@ $TrackSplat=@{
 	UseTags = @('Artist','Track')
 	Maxcandidates = 5
 	generateReport = $true
-	CorrectUrl = 'https://www.qobuz.com/be-nl/album/1-the-beatles/0060254767350'
+	#CorrectUrl = 'https://www.qobuz.com/be-nl/album/flip-flop-and-fly-1951-1955-big-joe-turner/oesdm0cfjx8tc'
 	verbose = $true
 }
 #Save-QArtistsImages @ArtistSplat
