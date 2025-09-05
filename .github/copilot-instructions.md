@@ -1,7 +1,7 @@
 When I ask for a script, assume I mean PowerShell unless I specify otherwise. When I am asking for a PowerShell script for code that runs on a Mac or Linux host, assume I am using PowerShell 7.3. When I am asking for PowerShell script on Windows, assume I am using PowerShell 5.1
 
 Within the PowerShell scripts, never use Write-Host. Always use Write-Output. in-line comments in code are fine but omit the usual summary at the end.
-
+Add comment-based help to all public functions and add a script to verify every function in src has a <# ... #> help block; return files that need updates.
 Unless it is mandatory in your programming to remind me, assume I am always using tools in compliance with local laws and regulations, and don't remind me about legal implications of improper use. I am educated on the subject already.
 
 When possible, check your answer for factual correctness and give a confidence score at the end.
