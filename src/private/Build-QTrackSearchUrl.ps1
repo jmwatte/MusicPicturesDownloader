@@ -19,10 +19,31 @@ function New-QTrackSearchUrl {
         [string]$Artist,
         [string]$Album
     )
-    $parts = @($Artist,$Track)
-    if ($Album) { $parts += $Album }
-    $query = ($parts -join ' ').Trim()
-    $escaped = [uri]::EscapeDataString($query)
-    $url = "https://www.qobuz.com/be-nl/search/tracks/$escaped"
-    return $url
+
+    process {
+        # sanitization helper (normalize, collapse doubled single-quotes, collapse whitespace)
+        $safe = {
+            param($s)
+            if (-not $s) { return '' }
+            $str = [string]$s
+            $str = Convert-TextNormalized $str
+            $str = $str -replace "''+", "'"
+            $str = ($str -replace '\s+',' ').Trim()
+            return $str
+        }
+
+        $artistClean = & $safe $Artist
+        $trackClean  = & $safe $Track
+        $albumClean  = & $safe $Album
+
+        $parts = @()
+        if ($artistClean) { $parts += $artistClean }
+        if ($trackClean)  { $parts += $trackClean }
+        if ($albumClean)  { $parts += $albumClean }
+
+        $query = ($parts -join ' ').Trim()
+        $escaped = [uri]::EscapeDataString($query)
+        $url = "https://www.qobuz.com/be-nl/search/tracks/$escaped"
+        Write-Output $url
+    }
 }

@@ -46,7 +46,12 @@ function Save-QobuzArtistImage {
 
 	Begin {
 		if (-not (Test-Path -LiteralPath $DestinationFolder)) { New-Item -Path $DestinationFolder -ItemType Directory -Force | Out-Null }
-		$cleanArtist = Convert-TextNormalized $ArtistName
+
+		# sanitize artist for search (normalize, collapse doubled single-quotes, collapse whitespace)
+		$cleanArtist = Convert-TextNormalized ([string]$ArtistName)
+		$cleanArtist = $cleanArtist -replace "''+", "'"
+		$cleanArtist = ($cleanArtist -replace '\s+',' ').Trim()
+
 		$searchUrl = 'https://www.qobuz.com/be-nl/search/artists/' + [System.Uri]::EscapeDataString($cleanArtist)
 		Write-Log -Message "Searching Qobuz: $searchUrl" -Level Verbose -Category Search
 	}

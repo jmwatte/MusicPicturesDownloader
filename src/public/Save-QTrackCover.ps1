@@ -110,6 +110,8 @@ function Save-QTrackCover {
 		try {
 			# Determine search fields first (from audio tags or provided params)
 			$SearchTrack = $null; $SearchArtist = $null; $SearchAlbum = $null
+			# search URL used for reporting (CorrectUrl or constructed search URL)
+			$searchUrl = $null
 			if ($PSBoundParameters.ContainsKey('AudioFilePath') -and $AudioFilePath) {
 				Write-Verbose "[Save-QTrackCover] Reading metadata from $AudioFilePath"
 				$meta = Get-TrackMetadataFromFile -AudioFilePath $AudioFilePath
@@ -158,6 +160,8 @@ function Save-QTrackCover {
 
 			# If a direct Qobuz URL was supplied, obtain candidates from the page instead of doing a search.
 			if ($PSBoundParameters.ContainsKey('CorrectUrl') -and $CorrectUrl) {
+				# use the provided page URL as the search URL for reporting
+				$searchUrl = $CorrectUrl
 				Write-Verbose ("[Save-QTrackCover] CorrectUrl provided; resolving candidates from page: {0}" -f $CorrectUrl)
 				# provide the search track so helper can find the matching track title in playerTracks
 				$candidates = Get-QobuzPageImageInfo -Url $CorrectUrl -PreferredSize $Size -MatchTrack $SearchTrack
@@ -170,6 +174,8 @@ function Save-QTrackCover {
 			}
 			else {
 				$url = New-QTrackSearchUrl -Track $SearchTrack -Artist $SearchArtist -Album $SearchAlbum
+				# record constructed search URL for reporting
+				$searchUrl = $url
 				Write-Verbose "[Save-QTrackCover] Searching: $url"
 				$html = Get-QTrackSearchHtml -Url $url
 				Write-Verbose ("[Save-QTrackCover] HTML length: {0}" -f ($html.Length))
@@ -283,7 +289,7 @@ function Save-QTrackCover {
 				$fullReport = [PSCustomObject]@{
 					Status      = $status
 					Timestamp   = $ts
-					Input       = [PSCustomObject]@{ SearchTrack = $SearchTrack; SearchArtist = $SearchArtist; SearchAlbum = $SearchAlbum; AudioFile = $AudioFilePath }
+					Input       = [PSCustomObject]@{ SearchTrack = $SearchTrack; SearchArtist = $SearchArtist; SearchAlbum = $SearchAlbum; AudioFile = $AudioFilePath; SearchUrl = $searchUrl }
 					Candidates  = $simpleCandidates
 					ReportItems = $report
 					Diagnostics = [PSCustomObject]@{
@@ -378,7 +384,7 @@ function Save-QTrackCover {
 					ErrorMessage = $errMsg
 					Exception = $_.Exception.GetType().FullName
 					StackTrace = $_.ScriptStackTrace
-					Input = [PSCustomObject]@{ SearchTrack = $SearchTrack; SearchArtist = $SearchArtist; AudioFile = $AudioFilePath }
+					Input = [PSCustomObject]@{ SearchTrack = $SearchTrack; SearchArtist = $SearchArtist; AudioFile = $AudioFilePath; SearchUrl = $searchUrl }
 					Candidates = $simpleCandidates
 				}
 				$diag | ConvertTo-Json -Depth 6 | Out-File -FilePath $diagFile -Encoding UTF8

@@ -20,7 +20,10 @@ function Convert-TextNormalized {
             $t = ''
         }
         $t = $Text.ToLowerInvariant()
-        $t = [System.Text.RegularExpressions.Regex]::Replace($t, "\(.*?\)", '') # remove parentheses
+        # If you want to keep the text inside parentheses but discard the '(' and ')', do:
+        $t = $t -replace '[\(\)]', ''
+        # If you instead want to remove the entire parenthetical (current behavior), use:
+        # $t = [System.Text.RegularExpressions.Regex]::Replace($t, '\(.*?\)', '')
         $t = [System.Text.RegularExpressions.Regex]::Replace($t, "[^\p{L}\p{Nd}\s]", '') # remove punctuation
         $t = $t.Normalize([System.Text.NormalizationForm]::FormD)
         # remove diacritics

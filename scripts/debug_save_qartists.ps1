@@ -2,7 +2,7 @@
 Import-Module 'C:\Users\jmw\Documents\PowerShell\Modules\MusicPictureDownloader\MusicPicturesDownloader\MusicPicturesDownloader.psd1' -Force
 #$album = "Back in black"
 #$artist = "AC/DC"
-$filepath="D:\1000 Songs Every Rock Fan Should Know\0093 - Willie Mae ''Big Mama'' Thornton - Hound Dog (1953).mp3"
+$filepath="D:\1000 Songs Every Rock Fan Should Know\0786 - Rihanna featuring Jay-Z - Umbrella (2007).mp3"
 $DestinationPath = Join-Path $env:TEMP 'qobuz-debug'
 if (-not (Test-Path -LiteralPath $DestinationPath)) { New-Item -Path $DestinationPath -ItemType Directory -Force | Out-Null }
 
@@ -30,8 +30,8 @@ $TrackSplat=@{
 	UseTags = @('Artist','Track')
 	Maxcandidates = 5
 	generateReport = $true
-	#CorrectUrl = 'https://www.qobuz.com/be-nl/album/flip-flop-and-fly-1951-1955-big-joe-turner/oesdm0cfjx8tc'
-	verbose = $true
+	CorrectUrl ="https://www.qobuz.com/be-nl/album/good-girl-gone-bad-reloaded-rihanna/0060251772142"
+	#verbose = $true
 }
 #Save-QArtistsImages @ArtistSplat
 
