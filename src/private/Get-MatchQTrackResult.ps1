@@ -74,24 +74,24 @@ function Get-MatchQTrackResult {
     # exact title match (strong but not saturating)
     $exactTitleBonus = 0.0
     if ($normReqTrack -and $normCandTitle -and ($normReqTrack -eq $normCandTitle)) {
-        $exactTitleBonus = 0.20
+        $exactTitleBonus = 0.50
     }
 
     # album contains track title (useful when release named after the single)
     $albumContainsBonus = 0.0
     if ($normReqTrack -and $normCandAlbum -and ($normCandAlbum.Contains($normReqTrack))) {
-        $albumContainsBonus = 0.08
+        $albumContainsBonus = 0.03
     }
 
     # exact artist match (moderate boost)
     $exactArtistBonus = 0.0
     if ($normReqArtist -and $normCandArtist -and ($normReqArtist -eq $normCandArtist)) {
-        $exactArtistBonus = 0.06
+        $exactArtistBonus = 0.16
     }
 
     # existing position bonus (small nudge for earlier results)
     try {
-        $positionWeight = 0.03
+        $positionWeight = 0.33
         $posIndex = 0
         if ($Candidate -and $Candidate.PSObject.Properties.Match('Index')) {
             $posIndex = [int]$Candidate.Index
