@@ -209,6 +209,20 @@ function Save-QTrackCover {
 			Write-Verbose ("[Save-QTrackCover] Scored candidates: {0}" -f ($scored.Count))
 			if ($scored.Count -gt 0) { Write-Verbose ("[Save-QTrackCover] Top score: {0}" -f ($scored[0].Score)) }
 
+			# If interactive mode requested, verify interactivity is possible and, if so, offer chooser when auto-download not triggered
+			$interactivePossible = $true
+			if ($Interactive) {
+				try {
+					if (-not ($Host -and $Host.UI -and $Host.UI.RawUI)) { $interactivePossible = $false }
+					if ([System.Console]::IsInputRedirected -or [System.Console]::IsOutputRedirected) { $interactivePossible = $false }
+				} catch { $interactivePossible = $false }
+				if (-not $interactivePossible) {
+					# Return the candidate list and friendly message so caller can decide next steps
+					Write-Output ([PSCustomObject]@{ Message = 'Interactive mode requested but not possible in this session (host does not support prompts or stdin/stdout is redirected). Returned candidates for offline inspection.'; Candidates = $scored })
+					return
+				}
+			}
+
 			$report = [System.Collections.Generic.List[object]]::new()
 			foreach ($s in $scored) {
 				Add-Type -AssemblyName System.Web -ErrorAction SilentlyContinue
@@ -234,8 +248,11 @@ function Save-QTrackCover {
 			$reportPath = $null
 			$local = $null
 			$autoDownloaded = $false
+			# Ensure we have a usable destination folder when saving images; fall back to TEMP if none provided
+			$actualDest = if ($PSBoundParameters.ContainsKey('DestinationFolder') -and $DestinationFolder -and $DestinationFolder.ToString().Trim() -ne '') { $DestinationFolder } else { $env:TEMP }
 			# allow auto-download when score meets threshold OR when user provided a direct page URL (CorrectUrl) and candidates exist
-			$allowAutoDownload = (-not $NoAuto) -and ($scored.Count -gt 0) -and ( ($scored[0].Score -ge $Threshold) -or ($PSBoundParameters.ContainsKey('CorrectUrl') -and $CorrectUrl) )
+			# If user explicitly requested interactive mode, suppress automatic download so the chooser is presented.
+			$allowAutoDownload = (-not $NoAuto) -and ($scored.Count -gt 0) -and ( ($scored[0].Score -ge $Threshold) -or ($PSBoundParameters.ContainsKey('CorrectUrl') -and $CorrectUrl) ) -and (-not $Interactive)
 			if ($allowAutoDownload) {
 				$best = $scored[0].Candidate
 				$imgUrl = $best.ImageUrl
@@ -253,7 +270,7 @@ function Save-QTrackCover {
 					$local = Save-Image -ImageUrl $imgUrl -DestinationFolder $tempDir -DownloadMode $DownloadMode -FileNameStyle $FileNameStyle -CustomFileName $CustomFileName -Album $SearchTrack -Artist $SearchArtist
 				}
 				else {
-					$local = Save-Image -ImageUrl $imgUrl -DestinationFolder $DestinationFolder -DownloadMode $DownloadMode -FileNameStyle $FileNameStyle -CustomFileName $CustomFileName -Album $SearchTrack -Artist $SearchArtist
+					$local = Save-Image -ImageUrl $imgUrl -DestinationFolder $actualDest -DownloadMode $DownloadMode -FileNameStyle $FileNameStyle -CustomFileName $CustomFileName -Album $SearchTrack -Artist $SearchArtist
 				}
 				$autoDownloaded = $true
 			}
@@ -347,9 +364,81 @@ function Save-QTrackCover {
 				}
 			}
 			elseif ($scored.Count -gt 0) {
-				Write-Output $scored
-				if ($reportPath) { Write-Output $reportPath }
-				return
+				# If interactive was requested and possible, invoke chooser here before returning
+				if ($Interactive) {
+					# import helper and invoke
+					#. (Join-Path -Path (Split-Path -Parent $MyInvocation.MyCommand.Path) -ChildPath '..\private\Select-QobuzCandidate.ps1') -ErrorAction SilentlyContinue
+					$choice = Select-QobuzCandidate -Scored $scored -Threshold $Threshold -SearchTrack $SearchTrack -SearchArtist $SearchArtist -SearchAlbum $SearchAlbum -SearchUrl $searchUrl
+					if ($choice.Action -eq 'AutoSelected' -or $choice.Action -eq 'Selected') {
+						$best = $choice.SelectedCandidate
+						# proceed to download/embed same as autoDownloaded path
+						$imgUrl = $best.ImageUrl
+						if ($imgUrl -match '_\d+\.jpg$') { $imgUrl = $imgUrl -replace '_\d+\.jpg$', ('_{0}.jpg' -f $Size) }
+						elseif ($imgUrl -match '_max\.jpg$') { $imgUrl = $imgUrl -replace '_max\.jpg$', ('_{0}.jpg' -f $Size) }
+						if ($Embed) {
+							$tempDir = Join-Path -Path $env:TEMP -ChildPath (New-Guid).Guid
+							New-Item -Path $tempDir -ItemType Directory -Force | Out-Null
+							$local = Save-Image -ImageUrl $imgUrl -DestinationFolder $tempDir -DownloadMode $DownloadMode -FileNameStyle $FileNameStyle -CustomFileName $CustomFileName -Album $SearchTrack -Artist $SearchArtist
+						}
+						else {
+							$local = Save-Image -ImageUrl $imgUrl -DestinationFolder $actualDest -DownloadMode $DownloadMode -FileNameStyle $FileNameStyle -CustomFileName $CustomFileName -Album $SearchTrack -Artist $SearchArtist
+						}
+						# If embedding requested, write and cleanup similar to autoDownloaded path
+						if ($Embed -and $AudioFilePath) {
+							$ok = Set-TrackImageWithFFmpeg -AudioFilePath $AudioFilePath -ImagePath $local
+							if ($ok) {
+								if ($Embed -and $local -and ($local -like "$env:TEMP*")) {
+									try { Remove-Item -Path $local -Force -ErrorAction SilentlyContinue } catch {}
+									try { Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue } catch {}
+								}
+								Add-Type -AssemblyName System.Web -ErrorAction SilentlyContinue
+								$resultArtist = if ($best.ArtistAttr -and ($best.ArtistAttr.ToString().Trim() -ne '')) { [System.Web.HttpUtility]::HtmlDecode($best.ArtistAttr) } else { $null }
+								$resultAlbum  = if ($best.AlbumAttr  -and ($best.AlbumAttr.ToString().Trim()  -ne '')) { [System.Web.HttpUtility]::HtmlDecode($best.AlbumAttr)  } else { $null }
+								$resultTitle  = if ($best.TitleAttr  -and ($best.TitleAttr.ToString().Trim()  -ne '')) { [System.Web.HttpUtility]::HtmlDecode($best.TitleAttr)  } else { $null }
+								Write-SummaryLine -InputArtist $SearchArtist -InputAlbum $SearchAlbum -InputTitle $SearchTrack -ResultArtist $resultArtist -ResultAlbum $resultAlbum -ResultTitle $resultTitle -Location ("embedded in $AudioFilePath")
+								Write-Output $true
+								return
+							}
+							else {
+								if ($Embed -and $local -and ($local -like "$env:TEMP*")) {
+									try { Remove-Item -Path $local -Force -ErrorAction SilentlyContinue } catch {}
+									try { Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue } catch {}
+								}
+								Write-Output $false
+								return
+							}
+						}
+						else {
+							Add-Type -AssemblyName System.Web -ErrorAction SilentlyContinue
+							$resultArtist = if ($best.ArtistAttr -and ($best.ArtistAttr.ToString().Trim() -ne '')) { [System.Web.HttpUtility]::HtmlDecode($best.ArtistAttr) } else { $null }
+							$resultAlbum  = if ($best.AlbumAttr  -and ($best.AlbumAttr.ToString().Trim()  -ne '')) { [System.Web.HttpUtility]::HtmlDecode($best.AlbumAttr)  } else { $null }
+							$resultTitle  = if ($best.TitleAttr  -and ($best.TitleAttr.ToString().Trim()  -ne '')) { [System.Web.HttpUtility]::HtmlDecode($best.TitleAttr)  } else { $null }
+							Write-SummaryLine -InputArtist $SearchArtist -InputAlbum $SearchAlbum -InputTitle $SearchTrack -ResultArtist $resultArtist -ResultAlbum $resultAlbum -ResultTitle $resultTitle -Location $local
+							Write-Output $local
+							return
+						}
+					}
+					elseif ($choice.Action -eq 'ManualSearch' -and $choice.ManualSearch) {
+						# return special object telling caller to re-run search with the provided manual parameters
+						Write-Output ([PSCustomObject]@{ Message = 'ManualSearchRequested'; ManualSearch = $choice.ManualSearch; Candidates = $scored })
+						return
+					}
+					elseif ($choice.Action -in @('Skip','Abort')) {
+						Write-Output ([PSCustomObject]@{ Message = $choice.Message; Candidates = $scored })
+						return
+					}
+					else {
+						# fall back to returning candidates for inspection
+						Write-Output $scored
+						if ($reportPath) { Write-Output $reportPath }
+						return
+					}
+				}
+				else {
+					Write-Output $scored
+					if ($reportPath) { Write-Output $reportPath }
+					return
+				}
 			}
 			else {
 				Write-Verbose "[Save-QTrackCover] No candidates found or scored."
