@@ -19,7 +19,8 @@ function New-QTrackSearchUrl {
         [string]$Artist,
         [string]$Album
     )
-    $parts = @($Artist,$Track)
+    # Ensure the search query uses Track (title) first, then Artist, then Album if present
+    $parts = @($Track, $Artist)
     if ($Album) { $parts += $Album }
     $query = ($parts -join ' ').Trim()
     $escaped = [uri]::EscapeDataString($query)
