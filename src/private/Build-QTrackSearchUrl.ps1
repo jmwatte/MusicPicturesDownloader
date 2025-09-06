@@ -32,13 +32,14 @@ function New-QTrackSearchUrl {
             return $str
         }
 
-        $artistClean = & $safe $Artist
+        # Build query in order: Track then Artist then Album (improves matching when track is primary)
         $trackClean  = & $safe $Track
+        $artistClean = & $safe $Artist
         $albumClean  = & $safe $Album
 
         $parts = @()
-        if ($artistClean) { $parts += $artistClean }
         if ($trackClean)  { $parts += $trackClean }
+        if ($artistClean) { $parts += $artistClean }
         if ($albumClean)  { $parts += $albumClean }
 
         $query = ($parts -join ' ').Trim()

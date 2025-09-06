@@ -199,7 +199,14 @@ function Save-QTrackCover {
 
 			# Use track-specific scorer
 			$scored = foreach ($c in $candidates) { Get-MatchQTrackResult -Track $SearchTrack -Artist $SearchArtist -Candidate $c }
-			$scored = $scored | Sort-Object -Property Score -Descending
+			# sort by score desc, tie-breaker: earlier candidate Index (lower is earlier in search results)
+			$scored = $scored | Sort-Object -Property @{
+				Expression = { $_.Score }
+				Descending = $true
+			}, @{
+				Expression = { if ($_.Candidate -and $_.Candidate.PSObject.Properties.Match('Index')) { [int]$_.Candidate.Index } else { [int]::MaxValue } }
+				Descending = $false
+			}
 			Write-Verbose ("[Save-QTrackCover] Scored candidates: {0}" -f ($scored.Count))
 			if ($scored.Count -gt 0) { Write-Verbose ("[Save-QTrackCover] Top score: {0}" -f ($scored[0].Score)) }
 
