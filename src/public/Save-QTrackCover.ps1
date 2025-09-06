@@ -99,7 +99,8 @@ function Save-QTrackCover {
 		[switch]$GenerateReport,
 		[ValidateSet('Track', 'Artist', 'Album')]
 		[string[]]$UseTags,
-		[switch]$Interactive,
+	[switch]$Interactive,
+	[int]$MaxInteractiveAttempts = 3,
 		# New: accept a direct Qobuz URL (album/track page). When supplied, this is used to obtain candidates directly.
 		# allow CorrectUrl without forcing an exclusive parameter set so it can be used with -AudioFilePath
 		[string]$CorrectUrl
@@ -368,8 +369,10 @@ function Save-QTrackCover {
 				if ($Interactive) {
 					# import helper and invoke
 					#. (Join-Path -Path (Split-Path -Parent $MyInvocation.MyCommand.Path) -ChildPath '..\private\Select-QobuzCandidate.ps1') -ErrorAction SilentlyContinue
-					$choice = Select-QobuzCandidate -Scored $scored -Threshold $Threshold -SearchTrack $SearchTrack -SearchArtist $SearchArtist -SearchAlbum $SearchAlbum -SearchUrl $searchUrl
-					if ($choice.Action -eq 'AutoSelected' -or $choice.Action -eq 'Selected') {
+					$attempt = 0
+					do {
+						$choice = Select-QobuzCandidate -Scored $scored -Threshold $Threshold -SearchTrack $SearchTrack -SearchArtist $SearchArtist -SearchAlbum $SearchAlbum -SearchUrl $searchUrl
+						if ($choice.Action -eq 'AutoSelected' -or $choice.Action -eq 'Selected') {
 						$best = $choice.SelectedCandidate
 						# proceed to download/embed same as autoDownloaded path
 						$imgUrl = $best.ImageUrl
@@ -417,12 +420,66 @@ function Save-QTrackCover {
 							Write-Output $local
 							return
 						}
-					}
-					elseif ($choice.Action -eq 'ManualSearch' -and $choice.ManualSearch) {
-						# return special object telling caller to re-run search with the provided manual parameters
-						Write-Output ([PSCustomObject]@{ Message = 'ManualSearchRequested'; ManualSearch = $choice.ManualSearch; Candidates = $scored })
-						return
-					}
+							break
+						}
+						elseif ($choice.Action -eq 'ManualSearch' -and $choice.ManualSearchRaw) {
+							$attempt++
+							if ($attempt -gt $MaxInteractiveAttempts) {
+								Write-Output ([PSCustomObject]@{ Message = 'MaxInteractiveAttemptsReached'; ManualSearch = $choice.ManualSearchRaw; Candidates = $scored })
+								return
+							}
+							# parse ManualSearchRaw according to shorthand: Title|Artist|Album
+							$raw = $choice.ManualSearchRaw
+							# split into up to 3 parts, allow quoted segments using ' or "
+							$parts = @()
+							$sb = '' ; $inQuote = $false ; $quoteChar = $null
+							for ($i = 0; $i -lt $raw.Length; $i++) {
+								$ch = $raw[$i]
+								if ($inQuote) {
+									if ($ch -eq $quoteChar) { $inQuote = $false; continue }
+									$sb += $ch
+								}
+								else {
+									if ($ch -eq '"' -or $ch -eq "'") { $inQuote = $true ; $quoteChar = $ch ; continue }
+									if ($ch -eq '|') { $parts += $sb ; $sb = ''; continue }
+									$sb += $ch
+								}
+							}
+							$parts += $sb
+							# pad to 3 with '=' (keep)
+							while ($parts.Count -lt 3) { $parts += '=' }
+							# apply rules: '=' => keep, '' => wipe, otherwise set (trim)
+							$newTitle = $SearchTrack; $newArtist = $SearchArtist; $newAlbum = $SearchAlbum
+							$p = $parts[0].Trim(); if ($p -ne '=') { if ($p -eq '') { $newTitle = '' } else { $newTitle = $p } }
+							$p = $parts[1].Trim(); if ($p -ne '=') { if ($p -eq '') { $newArtist = '' } else { $newArtist = $p } }
+							$p = $parts[2].Trim(); if ($p -ne '=') { if ($p -eq '') { $newAlbum = '' } else { $newAlbum = $p } }
+							$SearchTrack = $newTitle; $SearchArtist = $newArtist; $SearchAlbum = $newAlbum
+							Write-Verbose ("[Save-QTrackCover] ManualSearch attempt {0}: Title='{1}' Artist='{2}' Album='{3}'" -f $attempt, $SearchTrack, $SearchArtist, $SearchAlbum)
+							# rebuild search and candidates
+							$searchUrl = New-QTrackSearchUrl -Track $SearchTrack -Artist $SearchArtist -Album $SearchAlbum
+							$html = Get-QTrackSearchHtml -Url $searchUrl
+							$candidates = ConvertFrom-QTrackSearchResults -Html $html -MaxCandidates $MaxCandidates
+							$scored = foreach ($c in $candidates) { Get-MatchQTrackResult -Track $SearchTrack -Artist $SearchArtist -Candidate $c }
+							$scored = $scored | Sort-Object -Property @{
+								Expression = { $_.Score }
+								Descending = $true
+							}, @{
+								Expression = { if ($_.Candidate -and $_.Candidate.PSObject.Properties.Match('Index')) { [int]$_.Candidate.Index } else { [int]::MaxValue } }
+								Descending = $false
+							}
+							continue
+						}
+						elseif ($choice.Action -in @('Skip','Abort')) {
+							Write-Output ([PSCustomObject]@{ Message = $choice.Message; Candidates = $scored })
+							return
+						}
+						else {
+							# fall back to returning candidates for inspection
+							Write-Output $scored
+							if ($reportPath) { Write-Output $reportPath }
+							return
+						}
+					} while ($true)
 					elseif ($choice.Action -in @('Skip','Abort')) {
 						Write-Output ([PSCustomObject]@{ Message = $choice.Message; Candidates = $scored })
 						return

@@ -92,14 +92,9 @@ function Select-QobuzCandidate {
             }
         }
 
-        # pipe-separated correction string
+        # pipe-separated correction string - return raw string for caller parsing (supports quoted segments)
         if ($r -match '\|') {
-            $parts = $r -split '\|' | ForEach-Object { $_.Trim() }
-            $t = if ($parts.Count -ge 1) { $parts[0] } else { $null }
-            $a = if ($parts.Count -ge 2) { $parts[1] } else { $null }
-            $al = if ($parts.Count -ge 3) { $parts[2] } else { $null }
-            $manual = @{ Title = $t; Artist = $a; Album = $al }
-            return [PSCustomObject]@{ SelectedCandidate = $null; ManualSearch = $manual; AutoSelected = $false; Action = 'ManualSearch'; Message = 'User requested manual re-search.' }
+            return [PSCustomObject]@{ SelectedCandidate = $null; ManualSearchRaw = $r; ManualSearch = $null; AutoSelected = $false; Action = 'ManualSearch'; Message = 'User requested manual re-search.' }
         }
 
         return [PSCustomObject]@{ SelectedCandidate = $null; ManualSearch = $null; AutoSelected = $false; Action = 'UnknownInput'; Message = 'Unrecognized input.' }
