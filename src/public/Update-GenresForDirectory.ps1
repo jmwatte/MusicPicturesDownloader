@@ -51,11 +51,15 @@ function Update-GenresForDirectory {
     # Normalize strings for lookup (remove bracketed parts, punctuation, collapse whitespace)
     function ConvertTo-NormalizedLookup([string]$s) {
         if (-not $s) { return $null }
-        $t = $s.ToLowerInvariant().Trim()
+        $t = ($s -as [string]).ToLowerInvariant().Trim()
         # remove parenthetical or bracketed suffixes
         $t = $t -replace '\s*\(.*?\)','' -replace '\s*\[.*?\]',''
-        # remove punctuation except apostrophes
-        $t = $t -replace "[^\w\s']+", ''
+        # normalize hyphen/minus variants and apostrophe variants to spaces so tokens stay separated
+        $t = $t -replace "[-\u2010-\u2015\u2212]", ' '
+        $t = $t -replace "[\u2018\u2019'\`]", ' '
+        # replace remaining punctuation with space (preserve letters/numbers/spaces)
+        $t = [System.Text.RegularExpressions.Regex]::Replace($t, "[^\p{L}\p{Nd}\s]", ' ')
+        # collapse whitespace and trim
         $t = $t -replace '\s+',' '
         return $t.Trim()
     }

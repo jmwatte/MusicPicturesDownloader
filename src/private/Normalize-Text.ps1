@@ -39,16 +39,15 @@ function Convert-TextNormalized {
             $t = ''
         }
 
-        # ensure we normalize on a string (avoid enum/object issues)
+        # ensure we normalize on a string (avoid enum/object issues) and lowercase
         $t = ($t -as [string]).ToLowerInvariant()
 
-        # If you want to preserve inner text of parentheses but remove the parentheses characters, use:
-        # $t = $t -replace '[\(\)]', ''
-        # If you prefer to remove entire parenthetical content (default previous behaviour), uncomment:
-        # $t = [System.Text.RegularExpressions.Regex]::Replace($t, '\(.*?\)', '')
+        # Map common dash/apostrophe variants to a single space so tokens don't concatenate (B-52's -> B 52 s)
+        $t = $t -replace "[-\u2010-\u2015\u2212]", ' '      # hyphen/minus variants -> space
+        $t = $t -replace "[\u2018\u2019'\`]", ' '           # apostrophe/quote variants -> space
 
-        # remove punctuation except letters/numbers/space
-        $t = [System.Text.RegularExpressions.Regex]::Replace($t, "[^\p{L}\p{Nd}\s]", '')
+        # Replace other punctuation with space (preserve letters/numbers/spaces)
+        $t = [System.Text.RegularExpressions.Regex]::Replace($t, "[^\p{L}\p{Nd}\s]", ' ')
 
         # normalize form and strip diacritics
         $t = $t.Normalize([System.Text.NormalizationForm]::FormD)
@@ -59,6 +58,8 @@ function Convert-TextNormalized {
             }
         }
         $clean = $sb.ToString().Normalize([System.Text.NormalizationForm]::FormC)
+
+        # collapse whitespace and trim
         $clean = [System.Text.RegularExpressions.Regex]::Replace($clean, '\s+', ' ').Trim()
         return $clean
     }
