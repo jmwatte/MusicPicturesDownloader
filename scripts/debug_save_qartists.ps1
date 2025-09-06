@@ -2,7 +2,7 @@
 Import-Module 'C:\Users\jmw\Documents\PowerShell\Modules\MusicPictureDownloader\MusicPicturesDownloader\MusicPicturesDownloader.psd1' -Force
 #$album = "Back in black"
 #$artist = "AC/DC"
-$filepath="D:\1000 Songs Every Rock Fan Should Know\0029 - The Animals - The House Of The Rising Sun (1964).mp3"
+$filepath="D:\1000 Songs Every Rock Fan Should Know\0046 - The B-52's - Rock Lobster (1978).mp3"
 $DestinationPath = Join-Path $env:TEMP 'qobuz-debug'
 if (-not (Test-Path -LiteralPath $DestinationPath)) { New-Item -Path $DestinationPath -ItemType Directory -Force | Out-Null }
 
@@ -38,10 +38,10 @@ $TrackSplat=@{
 #save-QTrackCover @TrackSplat
 #Update-GenresForDirectory -Path 'D:\Buddy Rich - Take It Away (1968) [EAC-FLAC]' -AlbumArtistPolicy Smart -ThrottleSeconds 0 -Verbose -ConfirmEach
 #Update-TrackGenresFromLastFm -AudioFilePath "D:\220 Greatest Old Songs [MP3-128 & 320kbps]\Green,Green Grass Of Home.MP3" -Merge
-Get-ChildItem "D:\1000 Songs Every Rock Fan Should Know" | ForEach-Object {
-    $TrackSplat.AudioFilePath = $_.FullName
-    Save-QTrackCover @TrackSplat
-}
-#  Save-QTrackCover @TrackSplat
+# Get-ChildItem "D:\1000 Songs Every Rock Fan Should Know" | ForEach-Object {
+#     $TrackSplat.AudioFilePath = $_.FullName
+#     Save-QTrackCover @TrackSplat
+# }
+ Save-QTrackCover @TrackSplat
 # Write-Output "Done. Files in $DestinationPath :"
 #Get-ChildItem -Path $DestinationPath -ErrorAction SilentlyContinue | ForEach-Object { Write-Output $_.FullName }

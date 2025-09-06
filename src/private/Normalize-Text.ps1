@@ -44,7 +44,8 @@ function Convert-TextNormalized {
 
         # Map common dash/apostrophe variants to a single space so tokens don't concatenate (B-52's -> B 52 s)
         $t = $t -replace "[-\u2010-\u2015\u2212]", ' '      # hyphen/minus variants -> space
-        $t = $t -replace "[\u2018\u2019'\`]", ' '           # apostrophe/quote variants -> space
+        # use single-quoted regex and \x60 for backtick; '' (two single-quotes) represents a literal single-quote inside single-quoted string
+        $t = $t -replace '[\u2018\u2019''\x60]', ' '       # apostrophe/quote/backtick variants -> space
 
         # Replace other punctuation with space (preserve letters/numbers/spaces)
         $t = [System.Text.RegularExpressions.Regex]::Replace($t, "[^\p{L}\p{Nd}\s]", ' ')
