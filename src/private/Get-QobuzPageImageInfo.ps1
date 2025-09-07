@@ -19,7 +19,7 @@ function Get-QobuzPageImageInfo {
 		}
 
 		try {
-			$headers = @{ 'User-Agent' = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'; 'Accept-Language' = 'en-US,en;q=0.9' }
+			$headers = @{ 'User-Agent' = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'; 'Accept-Language' = 'us-en,en;q=0.9' }
 			$response = Invoke-WebRequest -Uri $Url -Headers $headers -UseBasicParsing -ErrorAction Stop
 			$html = $response.Content
 		}

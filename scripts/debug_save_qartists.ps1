@@ -19,11 +19,13 @@ if (-not $found) { throw 'MusicPicturesDownloader module not found (looked for l
 Import-Module $found -Force -ErrorAction Stop
 #$album = "Back in black"
 #$artist = "AC/DC"
-$filepath="D:\1000 Songs Every Rock Fan Should Know\0114 - Blues Traveler - Runaround (1995).mp3"
-$DestinationPath = Join-Path $env:TEMP 'qobuz-debug'
-if (-not (Test-Path -LiteralPath $DestinationPath)) { New-Item -Path $DestinationPath -ItemType Directory -Force | Out-Null }
+#$filepath="D:\1000 Songs Every Rock Fan Should Know\0114 - Blues Traveler - Runaround (1995).mp3"
+#$DestinationPath = Join-Path $env:TEMP 'qobuz-debug'
+#if (-not (Test-Path -LiteralPath $DestinationPath)) { New-Item -Path $DestinationPath -ItemType Directory -Force | Out-Null }
+$samplePath = 'C:\temp\qcheck-samples'
 
-Write-Output "Running: @($artist - $album) | Save-QArtistsImages -DestinationPath $DestinationPath -Verbose"
+$files = Get-ChildItem -LiteralPath $samplePath -File -Recurse | Where-Object { $_.Extension -match '\.mp3$|\.flac$|\.m4a$' } | Select-Object -ExpandProperty FullName
+#Write-Output "Running: @($artist - $album) | Save-QArtistsImages -DestinationPath $DestinationPath -Verbose"
 $AlbumSplat=@{
 	Album = $album
 	Artist = $artist
@@ -53,7 +55,9 @@ $TrackSplat=@{
 	#verbose = $true
 }
 #Save-QArtistsImages @ArtistSplat
- Invoke-QCheckArtist -AudioFilePath 'D:\The Beatles\1966 - Revolver\01 - Taxman.mp3' -Mode manual -ForceRefresh -Verbose 
+Invoke-QCheckArtistQueryMap -AudioFilePath $files -Mode Interactive -AutoApplyThreshold 95 -DryRun -Verbose -LogPath (Join-Path $samplePath 'qcheck.log')
+
+# Invoke-QCheckArtist -AudioFilePath 'D:\The Beatles\1966 - Revolver\01 - Taxman.mp3' -Mode manual -ForceRefresh -Verbose 
 #save-QTrackCover @TrackSplat
 #Update-GenresForDirectory -Path 'D:\Buddy Rich - Take It Away (1968) [EAC-FLAC]' -AlbumArtistPolicy Smart -ThrottleSeconds 0 -Verbose -ConfirmEach
 #Update-TrackGenresFromLastFm -AudioFilePath "D:\220 Greatest Old Songs [MP3-128 & 320kbps]\Green,Green Grass Of Home.MP3" -Merge

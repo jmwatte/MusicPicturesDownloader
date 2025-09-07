@@ -11,7 +11,7 @@ while deduplicating remote queries by normalized artist name and locale. It is i
 Path to a file or directory of audio files. Accepts pipeline input. Uses literal paths internally.
 
 .PARAMETER Locale
-Locale used when querying remote sources and for cache keys. Default is 'en-US'.
+Locale used when querying remote sources and for cache keys. Default is 'us-en'.
 
 .PARAMETER AutoApplyThreshold
 Confidence threshold (0-100) above which corrections will be auto-applied. Default 90.
@@ -30,110 +30,120 @@ Invoke-QCheckArtistQueryMap -Path C:\Music -AutoApplyThreshold 95 -WhatIf
 - It uses approved verbs and comment-based help. It does not dot-source private scripts; the module should export
   or have them available when the module is imported.
 #>
-[CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [ValidateNotNullOrEmpty()] [string] $Path,
+function Invoke-QCheckArtistQueryMap {
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true)] [string[]] $AudioFilePath,
+        [ValidateSet('Manual','Automatic','Interactive')] [string] $Mode = 'Interactive',
+        [ValidateNotNullOrEmpty()] [string] $Locale = 'us-en',
+        [int] $CacheMinutes = 60,
+        [switch] $ForceRefresh,
+        [int] $ThrottleSeconds = 1,
+        [string] $LogPath = (Join-Path -Path $env:TEMP -ChildPath 'MusicPicturesDownloader\qcheck.log'),
+        [switch] $DryRun,
+        [ValidateRange(0,100)] [int] $AutoApplyThreshold = 90,
+        [bool] $UseCache = $true
+    )
 
-    [Parameter()]
-    [ValidateNotNullOrEmpty()] [string] $Locale = 'en-US',
+    begin {
+        # Minimal validation and initialization
+        $runId = [guid]::NewGuid().ToString()
+        Write-Verbose "Invoke-QCheckArtistQueryMap RUNID=${runId} Mode=${Mode} Locale=${Locale} AutoApplyThreshold=${AutoApplyThreshold}"
 
-    [Parameter()]
-    [ValidateRange(0,100)] [int] $AutoApplyThreshold = 90,
+        # Detect TagLib# availability. This function assumes TagLib# is used for tag edits
+        try { $taglibLoaded = [AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.GetName().Name -match 'TagLib' } } catch { $taglibLoaded = $null }
+        $TagLibAvailable = ($null -ne $taglibLoaded -and $taglibLoaded.Count -gt 0)
+        if ($Mode -eq 'Automatic' -and -not $TagLibAvailable) {
+            throw "Automatic mode requires TagLib# to be installed and loaded. Load TagLib# before running." }
 
-    [Parameter()]
-    [bool] $UseCache = $true
-)
+        # Prepare the QueryMap as an ordered hashtable to keep deterministic processing order
+        $QueryMap = [ordered]@{}
 
-begin {
-    # Minimal validation and initialization
-    $LiteralPath = [IO.Path]::GetFullPath($Path)
-    Write-Verbose "Invoke-QCheckArtistQueryMap starting. Path: $LiteralPath Locale: $Locale AutoApplyThreshold: $AutoApplyThreshold"
+        # files collector
+        $files = @()
 
-    # Prepare the QueryMap as an ordered hashtable to keep deterministic processing order
-    $QueryMap = [ordered]@{}
-
-    # Create helper local functions where useful (small, internal only)
-    function Add-ToQueryMap {
-        param(
-            [string] $NormalizedKey,
-            [string] $OriginalQuery,
-            [string] $FilePath,
-            [string] $Field
-        )
-        if (-not $QueryMap.ContainsKey($NormalizedKey)) {
-            $QueryMap[$NormalizedKey] = [pscustomobject]@{
-                Key = $NormalizedKey
-                Normalized = $NormalizedKey.Split('|')[0]
-                Locale = $NormalizedKey.Split('|')[1]
-                OriginalQueries = @($OriginalQuery)
-                Files = @()
-                Candidates = @()
+        # Create helper local functions where useful (small, internal only)
+        function Add-ToQueryMap {
+            param(
+                [string] $NormalizedKey,
+                [string] $OriginalQuery,
+                [string] $FilePath,
+                [string] $Field
+            )
+            if (-not $QueryMap.Contains($NormalizedKey)) {
+                $QueryMap[$NormalizedKey] = [pscustomobject]@{
+                    Key = $NormalizedKey
+                    Normalized = $NormalizedKey.Split('|')[0]
+                    Locale = $NormalizedKey.Split('|')[1]
+                    OriginalQueries = @($OriginalQuery)
+                    Files = @()
+                    Candidates = @()
+                }
+            } else {
+                $QueryMap[$NormalizedKey].OriginalQueries += $OriginalQuery
             }
-        } else {
-            $QueryMap[$NormalizedKey].OriginalQueries += $OriginalQuery
+            $QueryMap[$NormalizedKey].Files += [pscustomobject]@{ FilePath = $FilePath; Field = $Field; OriginalValue = $OriginalQuery }
         }
-        $QueryMap[$NormalizedKey].Files += [pscustomobject]@{ FilePath = $FilePath; Field = $Field; OriginalValue = $OriginalQuery }
-    }
-}
-process {
-    # Accept file or directory path. If dir, enumerate files.
-    $filesToProcess = @()
-    if (Test-Path -LiteralPath $LiteralPath -PathType Container) {
-        $filesToProcess = Get-ChildItem -LiteralPath $LiteralPath -File -Recurse | Where-Object { $_.Extension -match '\.mp3$|\.flac$|\.m4a$' } | ForEach-Object { $_.FullName }
-    } elseif (Test-Path -LiteralPath $LiteralPath -PathType Leaf) {
-        $filesToProcess = @($LiteralPath)
-    } else {
-        throw "Path not found: $LiteralPath"
     }
 
-    foreach ($file in $filesToProcess) {
-        # Use existing private helper to read track metadata
-        $meta = Get-TrackMetadataFromFile -Path $file -ErrorAction SilentlyContinue
-        if ($null -eq $meta) {
-            Write-Verbose ("Skipping {0}: unable to read metadata" -f $file)
-            continue
-        }
-        foreach ($field in @('Artist','AlbumArtist')) {
-            $val = $meta.$field
-            if ([string]::IsNullOrWhiteSpace($val)) { continue }
-            $norm = Normalize-Text -InputString $val
-            $key = "${norm}|${Locale}"
-            Add-ToQueryMap -NormalizedKey $key -OriginalQuery $val -FilePath $file -Field $field
-        }
+    process {
+        foreach ($f in $AudioFilePath) { $files += $f }
     }
-}
-end {
-    # Fetch or load candidates for each normalized query
-    foreach ($entry in $QueryMap.GetEnumerator()) {
+
+    end {
+        if ($files.Count -eq 0) { return }
+
+        # Build QueryMap from files
+        foreach ($file in $files) {
+            # Use existing private helper to read track metadata
+            $meta = Get-TrackMetadataFromFile -AudioFilePath $file -ErrorAction SilentlyContinue
+            if ($null -eq $meta) {
+                Write-Verbose ("Skipping {0}: unable to read metadata" -f $file)
+                continue
+            }
+            foreach ($field in @('Artist','AlbumArtist')) {
+                $val = $meta.$field
+                if ([string]::IsNullOrWhiteSpace($val)) { continue }
+                $norm = Convert-TextNormalized -Text $val
+                $key = "${norm}|${Locale}"
+                Add-ToQueryMap -NormalizedKey $key -OriginalQuery $val -FilePath $file -Field $field
+            }
+        }
+        # Fetch or load candidates for each normalized query
+        foreach ($entry in $QueryMap.GetEnumerator()) {
         $key = $entry.Key
         $obj = $entry.Value
+        $UseCache=$false
         if ($UseCache) {
-            $cached = Cache-QArtistResults -Key $key -ErrorAction SilentlyContinue
+            # Use the original (raw) query for cache lookups to remain compatible with Get-CachedArtistResult
+            $cacheQuery = if ($obj.OriginalQueries -and $obj.OriginalQueries.Count -gt 0) { $obj.OriginalQueries[0] } else { $obj.Normalized }
+            $cached = Get-CachedArtistResult -Query $cacheQuery -Locale $obj.Locale -CacheMinutes $CacheMinutes -ErrorAction SilentlyContinue
             if ($null -ne $cached -and $cached.Count -gt 0) {
                 $obj.Candidates = $cached
-                Write-Verbose "Cache hit for $key (Candidates: $($cached.Count))"
+                Write-Verbose "Cache hit for query '$cacheQuery' (Candidates: $($cached.Count))"
                 continue
             }
         }
         # Not cached or not using cache: perform remote search
-        $html = Get-QSearchHtml -Query $obj.Normalized -Locale $obj.Locale -ErrorAction SilentlyContinue
+        #$url = Build-QArtistSearchUrl -Query $obj.Normalized -Locale $obj.Locale
+        $html = Get-QArtistSearchHtml -Query $obj.Normalized -Locale $obj.Locale -ErrorAction SilentlyContinue
         if ([string]::IsNullOrWhiteSpace($html)) {
             Write-Verbose "No HTML returned for query $($obj.Normalized)"
             $obj.Candidates = @()
             continue
         }
-        $cands = Parse-QArtistSearchResults -Html $html -ErrorAction SilentlyContinue
+        $cands = ConvertFrom-QTrackSearchResults -Html $html -ErrorAction SilentlyContinue
         if ($null -eq $cands) { $cands = @() }
         $obj.Candidates = $cands
-        # Cache non-empty result sets
+        # Cache non-empty result sets using Set-CachedArtistResult
         if ($UseCache -and $cands.Count -gt 0) {
-            Cache-QArtistResults -Key $key -Candidates $cands | Out-Null
+            $cacheQuery = if ($obj.OriginalQueries -and $obj.OriginalQueries.Count -gt 0) { $obj.OriginalQueries[0] } else { $obj.Normalized }
+            Set-CachedArtistResult -Query $cacheQuery -Result $cands -Locale $obj.Locale | Out-Null
         }
     }
 
     # Score and apply or suggest per-provenance item
-    foreach ($entry in $QueryMap.Values) {
+        foreach ($entry in $QueryMap.Values) {
         foreach ($prov in $entry.Files) {
             $provFile = $prov.FilePath
             $provField = $prov.Field
@@ -145,26 +155,63 @@ end {
                 continue
             }
 
-            $result = Select-QArtistResults -Candidates $candidates -OriginalValue $provOrig -ErrorAction SilentlyContinue
+                $result = Select-QArtistResults -Candidates $candidates -InputArtist $provOrig -ErrorAction SilentlyContinue
             if ($null -eq $result) {
                 Write-Verbose "Selector returned no result for $provOrig"
                 continue
             }
 
             # Decision: per-file per-field
-            if ($result.Confidence -ge $AutoApplyThreshold) {
-                $candidateName = $result.TopCandidate.Name
+            if ($result[0].MatchScore*100 -ge $AutoApplyThreshold) {
+                $candidateName = $result[0].Candidate
                 $shouldApply = $PSCmdlet.ShouldProcess("$provFile", "Set $provField to $candidateName")
-                if ($shouldApply) {
-                    Set-TrackImageWithFFmpeg -Path $provFile -Field $provField -Value $candidateName -WhatIf:$false -ErrorAction SilentlyContinue
-                    Write-QCheckLog -FilePath $provFile -Field $provField -OriginalValue $provOrig -Candidate $result.TopCandidate -Confidence $result.Confidence -Action 'AutoApplied' -ErrorAction SilentlyContinue
+                        if ($shouldApply) {
+                        # Ensure TagLib# available — we do not allow the ffmpeg fallback in this function
+                        if (-not $DryRun -and -not $TagLibAvailable) {
+                            throw "TagLib# is required to apply tag changes. ffmpeg fallback is disabled for this operation."
+                        }
+                        # Apply artist/albumartist using TagLib helper (TagLib# must be available)
+                        try {
+                            if ($provField -eq 'Artist') {
+                                $res = Set-FileArtistWithFFmpeg -AudioFilePath $provFile -Artist $candidateName -Replace:$true -ErrorAction Stop
+                            } else {
+                                $res = Set-FileArtistWithFFmpeg -AudioFilePath $provFile -AlbumArtist $candidateName -Replace:$true -ErrorAction Stop
+                            }
+                            $applyRecord = [PSCustomObject]@{
+                                RunId = $runId
+                                File = $provFile
+                                Field = $provField
+                                OldValue = if ($provField -eq 'Artist') { $res.OldArtist } else { $res.OldAlbumArtist }
+                                NewValue = $candidateName
+                                Confidence = $result[0].MatchScore*100
+
+                                AppliedAt = (Get-Date).ToString('o')
+                            }
+                            Write-QCheckLog -Record $applyRecord -LogPath $LogPath -ErrorAction SilentlyContinue
+                        }
+                        catch {
+                            Write-Warning "Failed to apply $provField on $provFile : $_"
+                        }
                 }
             } else {
                 # Suggest only
-                Write-QCheckLog -FilePath $provFile -Field $provField -OriginalValue $provOrig -Candidate $result.TopCandidate -Confidence $result.Confidence -Action 'Suggested' -ErrorAction SilentlyContinue
+                    $suggestRecord = [PSCustomObject]@{
+                        RunId = $runId
+                        File = $provFile
+                        Field = $provField
+                        OriginalValue = $provOrig
+                        Candidate = $result[0].Candidate
+                        Confidence = $result[0].MatchScore*100
+                        Action = 'Suggested'
+                        CreatedAt = (Get-Date).ToString('o')
+                    }
+                    Write-QCheckLog -Record $suggestRecord -LogPath $LogPath -ErrorAction SilentlyContinue
             }
         }
     }
 
-    Write-Verbose "Invoke-QCheckArtistQueryMap completed. Processed $($QueryMap.Count) normalized queries and $($QueryMap.Values | Measure-Object -Property Files -Sum).Sum provenance items."
+        Write-Verbose "Invoke-QCheckArtistQueryMap completed. Processed $($QueryMap.Count) normalized queries and $($QueryMap.Values | Measure-Object -Property $files -Sum).Sum provenance items."
+    }
 }
+
+

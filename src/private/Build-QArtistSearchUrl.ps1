@@ -11,7 +11,7 @@
     The artist search query string.
 
 .PARAMETER Locale
-    The locale path segment to use in the Qobuz URL (e.g. 'be-nl', 'en-us').
+    The locale path segment to use in the Qobuz URL (e.g. 'be-nl', 'us-en').
 
 .OUTPUTS
     String - the fully constructed Qobuz search URL.
