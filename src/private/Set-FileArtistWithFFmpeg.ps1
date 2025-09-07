@@ -2,7 +2,8 @@ function Set-FileArtistWithFFmpeg {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)] [string]$AudioFilePath,
-        [Parameter(Mandatory=$true)] [string]$Artist,
+        [string]$Artist,
+        [string]$AlbumArtist,
         [switch]$Replace
     )
 
@@ -14,8 +15,10 @@ function Set-FileArtistWithFFmpeg {
     New-Item -Path $temp -ItemType Directory -Force | Out-Null
     $out = Join-Path -Path $temp -ChildPath ([IO.Path]::GetFileName($AudioFilePath))
 
-    # Build metadata args: map existing metadata and set artist and album_artist if requested
-    $metaArgs = @('-map_metadata','0','-metadata', ("artist={0}" -f $Artist))
+    # Build metadata args: map existing metadata and set artist and/or albumartist if requested
+    $metaArgs = @('-map_metadata','0')
+    if ($Artist) { $metaArgs += @('-metadata', ("artist={0}" -f $Artist)) }
+    if ($AlbumArtist) { $metaArgs += @('-metadata', ("albumartist={0}" -f $AlbumArtist)) }
 
     $ffArgs = @('-y','-i',$AudioFilePath) + $metaArgs + @('-codec','copy',$out)
     $proc = & ffmpeg @ffArgs 2>&1
@@ -29,8 +32,10 @@ function Set-FileArtistWithFFmpeg {
         $oldMeta = $null
         try { $oldMeta = Get-TrackMetadataFromFile -AudioFilePath $AudioFilePath -ErrorAction SilentlyContinue } catch {}
         $oldArtist = $null
+        $oldAlbumArtist = $null
         if ($oldMeta -and $oldMeta.Tags) {
             if ($oldMeta.Tags.ContainsKey('artist')) { $oldArtist = $oldMeta.Tags['artist'] }
+            if ($oldMeta.Tags.ContainsKey('albumartist')) { $oldAlbumArtist = $oldMeta.Tags['albumartist'] }
         }
 
         # Replace original file with retry/backoff
@@ -50,8 +55,8 @@ function Set-FileArtistWithFFmpeg {
                 if ($attempt -ge $maxAttempts) { throw "Failed to replace original file after $maxAttempts attempts: $_" }
             }
         }
-        Remove-Item -Path $temp -Recurse -Force -ErrorAction SilentlyContinue
-        return @{ Ok = $true; OldArtist = $oldArtist }
+    Remove-Item -Path $temp -Recurse -Force -ErrorAction SilentlyContinue
+    return @{ Ok = $true; OldArtist = $oldArtist; OldAlbumArtist = $oldAlbumArtist }
     } catch {
         throw "Failed to replace original file: $_"
     }

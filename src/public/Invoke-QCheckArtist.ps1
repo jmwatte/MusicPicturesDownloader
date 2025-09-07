@@ -142,18 +142,35 @@ function Invoke-QCheckArtist {
 
             # Auto-apply high-confidence artist when requested and safe
             if ($Mode -eq 'Automatic' -and $top -and ($top.MatchScore -eq 1.0)) {
-                foreach ($f in $suggest.Files) {
-                    if ($DryRun) {
-                        Write-Verbose "DryRun: would set artist='{0}' on '{1}'" -f $top.Artist, $f
-                    }
-                    else {
-                        Write-Verbose "Applying artist='{0}' on '{1}'" -f $top.Artist, $f
-                        try {
-                            $res = Set-FileArtistWithFFmpeg -AudioFilePath $f -Artist $top.Artist -ErrorAction Stop
-                            Write-Information "Updated artist for $f (OldArtist=$($res.OldArtist))"
+                # The top object has a Candidate property (string). Use that rather than $top.Artist which may be empty.
+                $candidateStr = $null
+                if ($top.PSObject.Properties['Candidate']) { $candidateStr = $top.Candidate }
+                if (-not $candidateStr -or $candidateStr -eq '') {
+                    Write-Verbose "Auto-apply skipped: top candidate string empty for query $query"
+                }
+                else {
+                    $isAlbumArtistGroup = $key -like 'albumartist:*'
+                    foreach ($f in $suggest.Files) {
+                        if ($DryRun) {
+                            if ($isAlbumArtistGroup) { Write-Verbose ("DryRun: would set albumartist='{0}' on '{1}'" -f $candidateStr, $f) }
+                            else { Write-Verbose ("DryRun: would set artist='{0}' on '{1}'" -f $candidateStr, $f) }
                         }
-                        catch {
-                            Write-Warning "Failed to apply artist on $f: $_"
+                        else {
+                            if ($isAlbumArtistGroup) { Write-Verbose ("Applying albumartist='{0}' on '{1}'" -f $candidateStr, $f) }
+                            else { Write-Verbose ("Applying artist='{0}' on '{1}'" -f $candidateStr, $f) }
+                            try {
+                                if ($isAlbumArtistGroup) {
+                                    $res = Set-FileArtistWithFFmpeg -AudioFilePath $f -AlbumArtist $candidateStr -ErrorAction Stop
+                                    Write-Information "Updated albumartist for $f (OldAlbumArtist=$($res.OldAlbumArtist))"
+                                }
+                                else {
+                                    $res = Set-FileArtistWithFFmpeg -AudioFilePath $f -Artist $candidateStr -ErrorAction Stop
+                                    Write-Information "Updated artist for $f (OldArtist=$($res.OldArtist))"
+                                }
+                            }
+                            catch {
+                                Write-Warning "Failed to apply artist on $f : $_"
+                            }
                         }
                     }
                 }
