@@ -21,6 +21,63 @@ function Get-TrackMetadataFromFile {
             throw "Audio file not found: $AudioFilePath"
         }
 
+        # Try TagLib# first for fast, in-process metadata reads. If TagLib is not available
+        # or an error occurs reading the file, fall back to the existing ffprobe-based logic below.
+        try {
+            if ([System.Type]::GetType('TagLib.File, TagLib') -or (Get-Command -Name Add-Type -ErrorAction SilentlyContinue)) {
+                try {
+                    $tagFile = [TagLib.File]::Create($AudioFilePath)
+                } catch {
+                    throw $_
+                }
+
+                $t = $tagFile.Tag
+                $tags = [hashtable]::new([System.StringComparer]::InvariantCultureIgnoreCase)
+
+                if ($t.Title) { $tags['title'] = $t.Title }
+                if ($t.Album) { $tags['album'] = $t.Album }
+
+                if ($t.Performers -and $t.Performers.Length -gt 0) {
+                    $tags['artist'] = ($t.Performers -join '; ')
+                } elseif ($t.FirstPerformer) {
+                    $tags['artist'] = $t.FirstPerformer
+                }
+
+                if ($t.AlbumArtists -and $t.AlbumArtists.Length -gt 0) {
+                    $tags['albumartist'] = ($t.AlbumArtists -join '; ')
+                }
+
+                if ($t.Genres -and $t.Genres.Length -gt 0) { $tags['genre'] = ($t.Genres -join '; ') }
+                if ($t.Composers -and $t.Composers.Length -gt 0) { $tags['composer'] = ($t.Composers -join '; ') }
+                if ($t.Comment) { $tags['comment'] = $t.Comment }
+                if ($t.Year -and $t.Year -ne 0) { $tags['date'] = $t.Year.ToString() }
+                if ($t.Track -and $t.Track -ne 0) { $tags['track'] = $t.Track.ToString() }
+
+                # Pictures are binary; expose the count so callers know if embedded art exists
+                if ($t.Pictures -and $t.Pictures.Length -gt 0) { $tags['pictureCount'] = $t.Pictures.Length }
+
+                # TagLib reading succeeded; assume this is an audio file.
+                $audioCount = 1
+
+                Write-Verbose ([string]::Format('Get-TrackMetadataFromFile (TagLib): audioCount={0}; tags={1}; albumartist={2}',
+                    $audioCount,
+                    ($tags.Keys -join ','),
+                    ($tags.ContainsKey('albumartist') ? $tags['albumartist'] : '<none>')
+                ))
+
+                return [PSCustomObject]@{
+                    Title = ($tags.ContainsKey('title') ? $tags['title'] : $null)
+                    Album = ($tags.ContainsKey('album') ? $tags['album'] : $null)
+                    Artist = ($tags.ContainsKey('artist') ? $tags['artist'] : $null)
+                    Tags = $tags
+                    audioCount = $audioCount
+                }
+            }
+        } catch {
+            Write-Verbose "TagLib read failed, falling back to ffprobe: $_"
+            # continue to ffprobe fallback below
+        }
+
         $ffprobeCmd = Get-Command -Name ffprobe -ErrorAction SilentlyContinue
         if (-not $ffprobeCmd) {
             throw "ffprobe (part of ffmpeg) is required to read tags. Install ffmpeg and ensure 'ffprobe' is in PATH."

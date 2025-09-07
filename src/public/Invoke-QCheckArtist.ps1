@@ -30,7 +30,7 @@
     If set, do not modify any tags; function only reports suggestions.
 #>
 function Invoke-QCheckArtist {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     param(
         [Parameter(Mandatory=$true, ValueFromPipeline=$true)] [string[]] $AudioFilePath,
         [ValidateSet('Manual','Automatic','Interactive')] [string] $Mode = 'Interactive',
@@ -56,6 +56,14 @@ function Invoke-QCheckArtist {
         $runId = [guid]::NewGuid().ToString()
         Write-Verbose "Invoke-QCheckArtist RUNID=${runId} Mode=${Mode} Locale=${Locale}"
         $files = @()
+
+    # If running in Automatic mode we require TagLib (in-place edits) to be available
+        try {
+            $taglibLoaded = [AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.GetName().Name -match 'TagLib' }
+        } catch { $taglibLoaded = $null }
+        if ($Mode -eq 'Automatic' -and -not $taglibLoaded) {
+            throw "Automatic mode requires TagLib# to be installed and loaded. Run scripts\Install-TagLibSharp.ps1 and re-import the module."
+        }
     }
 
     process {
@@ -147,6 +155,72 @@ function Invoke-QCheckArtist {
             # Log suggestion
             Write-QCheckLog -Record $suggest -LogPath $LogPath
 
+            # Manual interactive flow: prompt user to pick a candidate and optionally apply it
+            if ($Mode -eq 'Manual') {
+                Write-Information "Candidates for query '$query':" -InformationAction Continue
+                for ($i = 0; $i -lt $scored.Count; $i++) {
+                    $it = $scored[$i]
+                    $candStr = $it.Candidate
+                    $score = $it.MatchScore
+                    Write-Information ("[{0}] {1}  (score={2:N2})" -f $i, $candStr, $score) -InformationAction Continue
+                }
+                Write-Information "Press Enter to accept top candidate, enter an index to select, 's' to skip, or 'q' to abort." -InformationAction Continue
+                $resp = Read-Host -Prompt 'Your choice'
+                if ($null -eq $resp -or $resp.Trim() -eq '') {
+                    $selected = $top
+                    $selAction = 'Selected'
+                }
+                else {
+                    $r = $resp.Trim()
+                    if ($r -eq 'q') { Write-Verbose 'User aborted manual selection.'; return }
+                    if ($r -eq 's') { Write-Verbose 'User skipped manual selection.'; $selected = $null; $selAction = 'Skip' }
+                    elseif ($r -match '^[0-9]+$') {
+                        $idx = [int]$r
+                        if ($idx -ge 0 -and $idx -lt $scored.Count) { $selected = $scored[$idx]; $selAction = 'Selected' }
+                        else { Write-Warning 'Index out of range; skipping.'; $selected = $null; $selAction = 'Invalid' }
+                    }
+                    else {
+                        Write-Warning 'Unrecognized input; skipping.'; $selected = $null; $selAction = 'Invalid'
+                    }
+                }
+
+                if ($selAction -eq 'Selected' -and $selected) {
+                    $candidateStr = $selected.Candidate
+                    if (-not $candidateStr -or $candidateStr -eq '') {
+                        Write-Warning "Selected candidate string is empty; skipping apply."
+                    }
+                    else {
+                        foreach ($f in $suggest.Files) {
+                            if ($DryRun) {
+                                Write-Verbose ("DryRun: would set artist='{0}' on '{1}'" -f $candidateStr, $f)
+                            }
+                            else {
+                                $what = "Set Artist='$candidateStr' on $f"
+                                if ($PSCmdlet.ShouldProcess($f, $what)) {
+                                    try {
+                                        $res = Set-FileArtistWithFFmpeg -AudioFilePath $f -Artist $candidateStr -ErrorAction Stop
+                                        Write-Information "Updated artist for $f (OldArtist=$($res.OldArtist))"
+                                        $applyRecord = [PSCustomObject]@{
+                                            RunId = $runId
+                                            File = $f
+                                            Field = 'Artist'
+                                            OldValue = $res.OldArtist
+                                            NewValue = $candidateStr
+                                            AppliedAt = (Get-Date).ToString('o')
+                                        }
+                                        Write-QCheckLog -Record $applyRecord -LogPath $LogPath
+                                    }
+                                    catch {
+                                        Write-Warning "Failed to apply artist on $f : $_"
+                                    }
+                                }
+                                else { Write-Verbose "Skipping apply for $f (ShouldProcess returned false)" }
+                            }
+                        }
+                    }
+                }
+            }
+
             # Auto-apply high-confidence artist when requested and safe
             if ($Mode -eq 'Automatic' -and $top -and ($top.MatchScore -eq 1.0)) {
                 # The top object has a Candidate property (string). Use that rather than $top.Artist which may be empty.
@@ -166,14 +240,37 @@ function Invoke-QCheckArtist {
                             if ($isAlbumArtistGroup) { Write-Verbose ("Applying albumartist='{0}' on '{1}'" -f $candidateStr, $f) }
                             else { Write-Verbose ("Applying artist='{0}' on '{1}'" -f $candidateStr, $f) }
                             try {
-                                if ($isAlbumArtistGroup) {
-                                    $res = Set-FileArtistWithFFmpeg -AudioFilePath $f -AlbumArtist $candidateStr -ErrorAction Stop
-                                    Write-Information "Updated albumartist for $f (OldAlbumArtist=$($res.OldAlbumArtist))"
+                                $what = if ($isAlbumArtistGroup) { "Set AlbumArtist='$candidateStr' on $f" } else { "Set Artist='$candidateStr' on $f" }
+                                if ($PSCmdlet.ShouldProcess($f, $what)) {
+                                    if ($isAlbumArtistGroup) {
+                                        $res = Set-FileArtistWithFFmpeg -AudioFilePath $f -AlbumArtist $candidateStr -ErrorAction Stop
+                                        Write-Information "Updated albumartist for $f (OldAlbumArtist=$($res.OldAlbumArtist))"
+                                        # log applied change
+                                        $applyRecord = [PSCustomObject]@{
+                                            RunId = $runId
+                                            File = $f
+                                            Field = 'AlbumArtist'
+                                            OldValue = $res.OldAlbumArtist
+                                            NewValue = $candidateStr
+                                            AppliedAt = (Get-Date).ToString('o')
+                                        }
+                                        Write-QCheckLog -Record $applyRecord -LogPath $LogPath
+                                    }
+                                    else {
+                                        $res = Set-FileArtistWithFFmpeg -AudioFilePath $f -Artist $candidateStr -ErrorAction Stop
+                                        Write-Information "Updated artist for $f (OldArtist=$($res.OldArtist))"
+                                        $applyRecord = [PSCustomObject]@{
+                                            RunId = $runId
+                                            File = $f
+                                            Field = 'Artist'
+                                            OldValue = $res.OldArtist
+                                            NewValue = $candidateStr
+                                            AppliedAt = (Get-Date).ToString('o')
+                                        }
+                                        Write-QCheckLog -Record $applyRecord -LogPath $LogPath
+                                    }
                                 }
-                                else {
-                                    $res = Set-FileArtistWithFFmpeg -AudioFilePath $f -Artist $candidateStr -ErrorAction Stop
-                                    Write-Information "Updated artist for $f (OldArtist=$($res.OldArtist))"
-                                }
+                                else { Write-Verbose "Skipping apply for $f (ShouldProcess returned false)" }
                             }
                             catch {
                                 Write-Warning "Failed to apply artist on $f : $_"

@@ -1,6 +1,12 @@
 ## Load TagLibSharp (required for in-place tag edits on PowerShell 7)
 $moduleRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
-$taglibPath = Join-Path -Path $moduleRoot -ChildPath 'lib\TagLibSharp.dll'
+# Probe common TagLib dll names (some packages name it taglib-sharp.dll)
+$possibleNames = @('TagLibSharp.dll','taglib-sharp.dll','TagLib.dll')
+$taglibPath = $null
+foreach ($n in $possibleNames) {
+    $p = Join-Path -Path $moduleRoot -ChildPath ("lib\{0}" -f $n)
+    if (Test-Path -LiteralPath $p) { $taglibPath = $p; break }
+}
 try {
     $already = [AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.GetName().Name -match 'TagLib' }
     if (-not $already) {
