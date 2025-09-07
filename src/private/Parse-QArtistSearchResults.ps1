@@ -1,0 +1,204 @@
+<#
+.SYNOPSIS
+    Parse Qobuz artist search HTML and extract artist candidates.
+
+.DESCRIPTION
+    ConvertFrom-QArtistSearchResults extracts candidate artist entries from
+    the HTML returned by Qobuz artist search pages. It prefers using the
+    PowerHTML module for DOM parsing but falls back to a robust regex-based
+    extractor for minimal dependency environments.
+
+.PARAMETER HtmlContent
+    The HTML content string to parse.
+
+.PARAMETER MaxCandidates
+    Maximum number of candidates to return.
+#>
+function ConvertFrom-QArtistSearchResults {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $HtmlContent,
+
+        [int] $MaxCandidates = 10
+    )
+
+    process {
+        $results = [System.Collections.Generic.List[object]]::new()
+        $index = 0
+
+    # Try PowerHTML if available for robust DOM parsing
+    $convertCmd = Get-Command -Name ConvertFrom-Html -Module PowerHTML -ErrorAction SilentlyContinue
+    Write-Verbose "ConvertFrom-QArtistSearchResults: PowerHTML available = $([bool]$convertCmd)"
+        if ($convertCmd) {
+            try {
+                $doc = ConvertFrom-Html -Content $HtmlContent
+
+                # Preferred: artist result list under the search results (example XPath provided)
+                # Try primary XPath, then a more forgiving fallback that looks for li elements
+                $liNodes = $doc.SelectNodes('//*[@id="search"]/section[2]/div/ul/li')
+                if (-not $liNodes -or $liNodes.Count -eq 0) {
+                    # fallback: any li that contains an artist link or an image
+                    $liNodes = $doc.SelectNodes("//li[.//a[contains(@href,'/artist') or contains(@href,'/artists')] or .//img]")
+                }
+                Write-Verbose "ConvertFrom-QArtistSearchResults: liNodes found = $([int]($liNodes -ne $null ? $liNodes.Count : 0))"
+                if ($liNodes -and $liNodes.Count -gt 0) {
+                    Write-Verbose "ConvertFrom-QArtistSearchResults: li count = $($liNodes.Count)"
+                    # Dump first few li nodes to temp file for debugging when verbose
+                    try {
+                        $debugFile = Join-Path -Path $env:TEMP -ChildPath ("qartist_li_debug_{0:yyyyMMdd_HHmmss}_{1}.html" -f (Get-Date), (Get-Random))
+                        $maxDump = [math]::Min(5, $liNodes.Count)
+                        for ($i=0; $i -lt $maxDump; $i++) {
+                            $node = $liNodes[$i]
+                            if ($node) {
+                                Add-Content -LiteralPath $debugFile -Value "<!-- li index $i -->" -Encoding UTF8
+                                Add-Content -LiteralPath $debugFile -Value ($node.OuterHtml -as [string]) -Encoding UTF8
+                            }
+                        }
+                        Write-Verbose "Wrote sample li nodes to $debugFile"
+                    } catch {
+                        Write-Verbose "Failed to write debug file: $_"
+                    }
+                    foreach ($li in $liNodes) {
+                        if ($MaxCandidates -gt 0 -and $results.Count -ge $MaxCandidates) { break }
+
+                        # anchor candidate: prefer explicit artist links
+                        $aNode = $li.SelectSingleNode(".//a[contains(@href,'/artist') or contains(@href,'/artists')]")
+                        if (-not $aNode) { $aNode = $li.SelectSingleNode('.//div[1]/a') }
+                        if (-not $aNode) { $aNode = $li.SelectSingleNode('.//a') }
+                        $href = $null
+                        if ($aNode -and $aNode.Attributes -and $aNode.Attributes['href']) { $href = $aNode.Attributes['href'].Value }
+
+                        # Image candidate (thumbnail)
+                        $imgNode = $li.SelectSingleNode('.//img')
+                        if (-not $imgNode) { $imgNode = $li.SelectSingleNode('.//div[1]/div[1]/img') }
+                        $thumb = $null
+                        if ($imgNode -and $imgNode.Attributes) {
+                            if ($imgNode.Attributes['data-src']) { $thumb = $imgNode.Attributes['data-src'].Value }
+                            elseif ($imgNode.Attributes['data-srcset']) { $thumb = $imgNode.Attributes['data-srcset'].Value }
+                            elseif ($imgNode.Attributes['srcset']) { $thumb = $imgNode.Attributes['srcset'].Value }
+                            elseif ($imgNode.Attributes['src']) { $thumb = $imgNode.Attributes['src'].Value }
+                            elseif ($imgNode.GetAttributeValue) {
+                                try { $thumb = $imgNode.GetAttributeValue('data-src', $null) } catch {}
+                                if (-not $thumb) { try { $thumb = $imgNode.GetAttributeValue('src', $null) } catch {} }
+                            }
+                        }
+
+                        # Artist display/name: try link title, image alt, then inner text
+                        $name = $null
+                        if ($aNode -and $aNode.Attributes -and $aNode.Attributes['title']) { $name = $aNode.Attributes['title'].Value }
+                        if (-not $name -and $imgNode -and $imgNode.Attributes -and $imgNode.Attributes['alt']) { $name = $imgNode.Attributes['alt'].Value }
+                        if (-not $name -and $aNode -and $aNode.InnerText) { $name = ($aNode.InnerText -as [string]) -replace '\s+', ' ' }
+                        if (-not $name) {
+                            # try smaller name-like nodes
+                            $nameNode = $li.SelectSingleNode('.//div[contains(@class,"name") or contains(@class,"title")]')
+                            if ($nameNode) { $name = ($nameNode.InnerText -as [string]) -replace '\s+', ' ' }
+                        }
+
+                        # Album count heuristic: pick the largest integer found in the li text
+                        $albumCount = $null
+                        try {
+                            $text = ($li.InnerText -as [string]) -replace '\s+', ' '
+                            $nums = ([regex]::Matches($text, '\d+')) | ForEach-Object { [int]$_.Value }
+                            if ($nums) { $albumCount = ($nums | Sort-Object -Descending | Select-Object -First 1) }
+                        } catch {}
+
+                        $obj = [PSCustomObject]@{
+                            Index = $index
+                            Name = if ($name) { ($name -as [string]).Trim() } else { $null }
+                            Link = $href
+                            AlbumCount = ($albumCount -as [int])
+                            Thumbnail = $thumb
+                        }
+                        $results.Add($obj)
+                        Write-Verbose ("Added candidate: Index={0} Name='{1}' Link='{2}' AlbumCount={3}" -f $obj.Index, ($obj.Name -ne $null ? $obj.Name : ''), ($obj.Link -ne $null ? $obj.Link : ''), ($obj.AlbumCount -ne $null ? $obj.AlbumCount : ''))
+                        $index++
+                    }
+                }
+                else {
+                    # Fallback: look for anchors that look like artist links
+                    $anchorNodes = $doc.SelectNodes("//a[contains(@href, '/artist') or contains(@href, '/artists')]")
+                    if ($anchorNodes) {
+                        foreach ($a in $anchorNodes) {
+                            if ($MaxCandidates -gt 0 -and $results.Count -ge $MaxCandidates) { break }
+
+                            $href = $a.Attributes['href'] ? $a.Attributes['href'].Value : $null
+                            $name = ($a.InnerText -as [string]) -replace '\s+', ' '
+
+                            # try to find nearby album count (common patterns use a sibling or child span)
+                            $albumCount = $null
+                            $countNode = $a.SelectSingleNode('.//span')
+                            if (-not $countNode) {
+                                # sibling span
+                                $countNode = $a.ParentNode.SelectSingleNode('.//span')
+                            }
+                            if ($countNode) {
+                                $cText = ($countNode.InnerText -as [string]) -replace '[^0-9]', ''
+                                if ($cText -match '\d+') { $albumCount = [int]$cText }
+                            }
+
+                            # thumbnail if present
+                            $imgNode = $a.SelectSingleNode('.//img')
+                            $thumb = $null
+                            if ($imgNode) {
+                                if ($imgNode.Attributes['data-src']) { $thumb = $imgNode.Attributes['data-src'].Value }
+                                elseif ($imgNode.Attributes['src']) { $thumb = $imgNode.Attributes['src'].Value }
+                            }
+
+                            $obj = [PSCustomObject]@{
+                                Index = $index
+                                Name = ($name -as [string]).Trim()
+                                Link = $href
+                                AlbumCount = ($albumCount -as [int])
+                                Thumbnail = $thumb
+                            }
+                            $results.Add($obj)
+                            $index++
+                        }
+                    }
+                }
+            }
+            catch {
+                Write-Verbose "PowerHTML parse failed, falling back to regex parser: $_"
+            }
+        }
+
+        # Fallback: regex-based extraction to find artist links and names
+        if ($results.Count -eq 0) {
+            # Look for /artists/ or /artist/ links with a visible name nearby
+            $pattern2 = @'
+href\s*=\s*["'](?<href>[^"']*/artists?/[^"']+)["'][^>]*>\s*(?:<img[^>]*>\s*)?(?<name>[^<]+)
+'@
+            $matches = [regex]::Matches($HtmlContent, $pattern2, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+            foreach ($m in $matches) {
+                if ($MaxCandidates -gt 0 -and $results.Count -ge $MaxCandidates) { break }
+                $href = $m.Groups['href'].Value
+                $name = $m.Groups['name'].Value -replace '\s+', ' '
+                $obj = [PSCustomObject]@{
+                    Index = $index
+                    Name = ($name -as [string]).Trim()
+                    Link = $href
+                    AlbumCount = $null
+                    Thumbnail = $null
+                }
+                $results.Add($obj)
+                $index++
+            }
+        }
+
+        # If still nothing found, dump a small sample of the raw HTML to temp for inspection
+        if ($results.Count -eq 0) {
+            try {
+                $sample = $HtmlContent
+                if ($sample.Length -gt 40960) { $sample = $sample.Substring(0, 40960) }
+                $debugFile2 = Join-Path -Path $env:TEMP -ChildPath ("qartist_raw_debug_{0:yyyyMMdd_HHmmss}_{1}.html" -f (Get-Date), (Get-Random))
+                Set-Content -LiteralPath $debugFile2 -Value $sample -Encoding UTF8
+                Write-Verbose "ConvertFrom-QArtistSearchResults: No candidates found; wrote raw HTML sample to $debugFile2"
+            } catch {
+                Write-Verbose "ConvertFrom-QArtistSearchResults: Failed to write raw HTML sample: $_"
+            }
+        }
+
+        Write-Output $results
+    }
+}
