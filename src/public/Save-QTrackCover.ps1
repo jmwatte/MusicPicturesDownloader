@@ -251,9 +251,32 @@ function Save-QTrackCover {
 			$autoDownloaded = $false
 			# Ensure we have a usable destination folder when saving images; fall back to TEMP if none provided
 			$actualDest = if ($PSBoundParameters.ContainsKey('DestinationFolder') -and $DestinationFolder -and $DestinationFolder.ToString().Trim() -ne '') { $DestinationFolder } else { $env:TEMP }
-			# allow auto-download when score meets threshold OR when user provided a direct page URL (CorrectUrl) and candidates exist
+			# allow auto-download when score meets threshold AND there is track/album evidence, OR when user provided a direct page URL (CorrectUrl) and candidates exist
+			# This prevents artist-only / position-only matches from being auto-selected.
 			# If user explicitly requested interactive mode, suppress automatic download so the chooser is presented.
-			$allowAutoDownload = (-not $NoAuto) -and ($scored.Count -gt 0) -and ( ($scored[0].Score -ge $Threshold) -or ($PSBoundParameters.ContainsKey('CorrectUrl') -and $CorrectUrl) ) -and (-not $Interactive)
+			$hasStrongEvidence = $false
+			try {
+				if ($scored -and $scored.Count -gt 0) {
+					$top = $scored[0]
+					$topTrack = [double]$top.TrackScore
+					$topArtist = [double]$top.ArtistScore
+					$topAlbum = [double]$top.AlbumScore
+					# Require a moderate track match plus supporting artist or album evidence,
+					# or a very strong album match (for compilation titles etc.)
+					$hasStrongEvidence = ( ($topTrack -gt 0.2) -and ( ($topArtist -gt 0.2) -or ($topAlbum -gt 0.2) ) ) -or ($topAlbum -gt 0.4)
+				}
+			} catch { $hasStrongEvidence = $false }
+
+			$allowAutoDownload = (-not $NoAuto) -and ($scored.Count -gt 0) -and ( ( ($scored[0].Score -ge $Threshold) -and $hasStrongEvidence ) -or ($PSBoundParameters.ContainsKey('CorrectUrl') -and $CorrectUrl) ) -and (-not $Interactive)
+
+			# Diagnostic verbose output to explain auto-download decision
+			try {
+				if ($scored -and $scored.Count -gt 0) {
+					$top = $scored[0]
+					Write-Verbose ("[Save-QTrackCover] Top candidate scores: Score={0}, Track={1}, Artist={2}, Album={3}, ExactTitleBonus={4}, ExactArtistBonus={5}, PositionBonus={6}" -f $top.Score, $top.TrackScore, $top.ArtistScore, $top.AlbumScore, $top.ExactTitleBonus, $top.ExactArtistBonus, $top.PositionBonus)
+					Write-Verbose ("[Save-QTrackCover] hasStrongEvidence={0}; Threshold={1}; NoAuto={2}; CorrectUrlProvided={3}; Interactive={4}; allowAutoDownload={5}" -f $hasStrongEvidence, $Threshold, $NoAuto.IsPresent, ($PSBoundParameters.ContainsKey('CorrectUrl') -and $CorrectUrl), $Interactive.IsPresent, $allowAutoDownload)
+				}
+			} catch {}
 			if ($allowAutoDownload) {
 				$best = $scored[0].Candidate
 				$imgUrl = $best.ImageUrl
@@ -371,7 +394,7 @@ function Save-QTrackCover {
 					#. (Join-Path -Path (Split-Path -Parent $MyInvocation.MyCommand.Path) -ChildPath '..\private\Select-QobuzCandidate.ps1') -ErrorAction SilentlyContinue
 					$attempt = 0
 					do {
-						$choice = Select-QobuzCandidate -Scored $scored -Threshold $Threshold -SearchTrack $SearchTrack -SearchArtist $SearchArtist -SearchAlbum $SearchAlbum -SearchUrl $searchUrl
+						$choice = Select-QobuzCandidate -Scored $scored -Threshold $Threshold -SearchTrack $SearchTrack -SearchArtist $SearchArtist -SearchAlbum $SearchAlbum -SearchUrl $searchUrl -AllowAutoSelect:(!$Interactive)
 						if ($choice.Action -eq 'AutoSelected' -or $choice.Action -eq 'Selected') {
 						$best = $choice.SelectedCandidate
 						# proceed to download/embed same as autoDownloaded path

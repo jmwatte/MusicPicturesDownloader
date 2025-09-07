@@ -36,6 +36,7 @@ function Select-QobuzCandidate {
     [string]$SearchArtist,
     [string]$SearchAlbum,
     [string]$SearchUrl
+    , [bool]$AllowAutoSelect = $true
     )
 
     # Return shape: PSCustomObject with keys: SelectedCandidate, ManualSearch, AutoSelected, Action, Message
@@ -44,8 +45,8 @@ function Select-QobuzCandidate {
             return [PSCustomObject]@{ SelectedCandidate = $null; ManualSearch = $null; AutoSelected = $false; Action = 'NoCandidates'; Message = 'No candidates to choose from.' }
         }
 
-        # Auto-select top candidate when above threshold
-        if ($Scored[0].Score -ge $Threshold) {
+        # Auto-select top candidate when above threshold (only if caller allows it)
+        if ($AllowAutoSelect -and ($Scored[0].Score -ge $Threshold)) {
             return [PSCustomObject]@{ SelectedCandidate = $Scored[0].Candidate; ManualSearch = $null; AutoSelected = $true; Action = 'AutoSelected'; Message = 'Top candidate auto-selected (score above threshold).' }
         }
 
@@ -66,9 +67,17 @@ function Select-QobuzCandidate {
         }
 
     Write-Information '' -InformationAction Continue
-    if ($SearchUrl) { Write-Information ("Search URL: {0}" -f $SearchUrl) -InformationAction Continue }
+    # Prefer to rebuild the search URL here so the displayed URL reflects the Track|Artist|Album order
+    $displayUrl = $null
+    if (Get-Command -Name New-QTrackSearchUrl -ErrorAction SilentlyContinue) {
+        try {
+            $displayUrl = New-QTrackSearchUrl -Track $SearchTrack -Artist $SearchArtist -Album $SearchAlbum
+        } catch { $displayUrl = $null }
+    }
+    if (-not $displayUrl -and $SearchUrl) { $displayUrl = $SearchUrl }
+    if ($displayUrl) { Write-Information ("Search URL: {0}" -f $displayUrl) -InformationAction Continue }
         Write-Information "Enter the index number to select that candidate, press Enter to accept the top candidate," -InformationAction Continue
-        Write-Information "or provide a pipe-separated correction string in the form: Title|Artist|Album (album optional)." -InformationAction Continue
+        Write-Information "or provide a pipe-separated correction string in the form: Title|Artist|Album (album optional), or just type a title to re-search." -InformationAction Continue
         Write-Information "Type 's' to skip selection or 'q' to abort." -InformationAction Continue
         $resp = Read-Host -Prompt "Your choice"
 
@@ -92,12 +101,9 @@ function Select-QobuzCandidate {
             }
         }
 
-        # pipe-separated correction string - return raw string for caller parsing (supports quoted segments)
-        if ($r -match '\|') {
-            return [PSCustomObject]@{ SelectedCandidate = $null; ManualSearchRaw = $r; ManualSearch = $null; AutoSelected = $false; Action = 'ManualSearch'; Message = 'User requested manual re-search.' }
-        }
-
-        return [PSCustomObject]@{ SelectedCandidate = $null; ManualSearch = $null; AutoSelected = $false; Action = 'UnknownInput'; Message = 'Unrecognized input.' }
+    # Treat any remaining non-empty input as a manual re-search request.
+    # This supports both pipe-separated corrections (Title|Artist|Album) and simple title-only entries.
+    return [PSCustomObject]@{ SelectedCandidate = $null; ManualSearchRaw = $r; ManualSearch = $null; AutoSelected = $false; Action = 'ManualSearch'; Message = 'User requested manual re-search.' }
     }
     catch {
         return [PSCustomObject]@{ SelectedCandidate = $null; ManualSearch = $null; AutoSelected = $false; Action = 'Error'; Message = $_.Exception.Message }
