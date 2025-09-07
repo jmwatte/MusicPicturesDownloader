@@ -53,14 +53,14 @@ $TrackSplat=@{
 	#verbose = $true
 }
 #Save-QArtistsImages @ArtistSplat
-
+ Invoke-QCheckArtist -AudioFilePath 'D:\The Beatles\1966 - Revolver\01 - Taxman.mp3' -Mode InterActive -Locale 'be-nl' -DryRun -Verbose
 #save-QTrackCover @TrackSplat
 #Update-GenresForDirectory -Path 'D:\Buddy Rich - Take It Away (1968) [EAC-FLAC]' -AlbumArtistPolicy Smart -ThrottleSeconds 0 -Verbose -ConfirmEach
 #Update-TrackGenresFromLastFm -AudioFilePath "D:\220 Greatest Old Songs [MP3-128 & 320kbps]\Green,Green Grass Of Home.MP3" -Merge
-Get-ChildItem "C:\Music\Covers" | ForEach-Object {
-    $TrackSplat.AudioFilePath = $_.FullName
-    Save-QTrackCover @TrackSplat
-}
+# Get-ChildItem "C:\Music\Covers" | ForEach-Object {
+#     $TrackSplat.AudioFilePath = $_.FullName
+#     Save-QTrackCover @TrackSplat
+# }
 #  Save-QTrackCover @TrackSplat
 # Write-Output "Done. Files in $DestinationPath :"
 #Get-ChildItem -Path $DestinationPath -ErrorAction SilentlyContinue | ForEach-Object { Write-Output $_.FullName }
