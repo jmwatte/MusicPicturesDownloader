@@ -8,8 +8,40 @@ function Set-FileArtistWithFFmpeg {
     )
 
     if (-not (Test-Path -LiteralPath $AudioFilePath)) { throw "Audio file not found: $AudioFilePath" }
+
+    # Require TagLib# for in-place edits. No fallback allowed.
+    try {
+        $null = [TagLib.File]::Create($AudioFilePath)
+    } catch {
+        throw "TagLib# is required for in-place tag edits and either isn't loaded or cannot open the file: $_"
+    }
+
+    # capture old tags
+    $oldMeta = $null
+    try { $oldMeta = Get-TrackMetadataFromFile -AudioFilePath $AudioFilePath -ErrorAction SilentlyContinue } catch {}
+    $oldArtist = $null; $oldAlbumArtist = $null
+    if ($oldMeta -and $oldMeta.Tags) {
+        if ($oldMeta.Tags.ContainsKey('artist')) { $oldArtist = $oldMeta.Tags['artist'] }
+        if ($oldMeta.Tags.ContainsKey('albumartist')) { $oldAlbumArtist = $oldMeta.Tags['albumartist'] }
+    }
+
+    try {
+        $file = [TagLib.File]::Create($AudioFilePath)
+        if ($Artist) {
+            $file.Tag.Performers = ,([string]$Artist)
+        }
+        if ($AlbumArtist) {
+            try { $file.Tag.AlbumArtists = ,([string]$AlbumArtist) } catch { }
+        }
+        $file.Save()
+        return @{ Ok = $true; OldArtist = $oldArtist; OldAlbumArtist = $oldAlbumArtist }
+    } catch {
+        throw "TagLib save failed: $_"
+    }
+
+    # Fallback: use ffmpeg temp-file replace flow
     $ffmpeg = Get-Command ffmpeg -ErrorAction SilentlyContinue
-    if (-not $ffmpeg) { throw "ffmpeg is required to write tags. Ensure ffmpeg.exe is in PATH." }
+    if (-not $ffmpeg) { throw "ffmpeg is required to write tags when TagLib is not available. Ensure ffmpeg.exe is in PATH." }
 
     $temp = Join-Path -Path $env:TEMP -ChildPath (New-Guid).Guid
     New-Item -Path $temp -ItemType Directory -Force | Out-Null
@@ -55,8 +87,8 @@ function Set-FileArtistWithFFmpeg {
                 if ($attempt -ge $maxAttempts) { throw "Failed to replace original file after $maxAttempts attempts: $_" }
             }
         }
-    Remove-Item -Path $temp -Recurse -Force -ErrorAction SilentlyContinue
-    return @{ Ok = $true; OldArtist = $oldArtist; OldAlbumArtist = $oldAlbumArtist }
+        Remove-Item -Path $temp -Recurse -Force -ErrorAction SilentlyContinue
+        return @{ Ok = $true; OldArtist = $oldArtist; OldAlbumArtist = $oldAlbumArtist }
     } catch {
         throw "Failed to replace original file: $_"
     }

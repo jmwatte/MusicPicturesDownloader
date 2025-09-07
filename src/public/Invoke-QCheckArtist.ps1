@@ -35,7 +35,8 @@ function Invoke-QCheckArtist {
         [Parameter(Mandatory=$true, ValueFromPipeline=$true)] [string[]] $AudioFilePath,
         [ValidateSet('Manual','Automatic','Interactive')] [string] $Mode = 'Interactive',
         [string] $Locale = 'be-nl',
-        [int] $CacheMinutes = 60,
+    [int] $CacheMinutes = 60,
+    [switch] $ForceRefresh,
         [int] $ThrottleSeconds = 1,
         [string] $LogPath = (Join-Path -Path $env:TEMP -ChildPath 'MusicPicturesDownloader\qcheck.log'),
         [switch] $DryRun
@@ -101,8 +102,14 @@ function Invoke-QCheckArtist {
             $sample = $members[0]
             $query = if ($sample.AlbumArtist) { $sample.AlbumArtist } else { $sample.Artist }
 
-            # check cache
-            $cached = Get-CachedArtistResult -Query $query -Locale $Locale -CacheMinutes $CacheMinutes
+            # check cache (unless force-refresh requested)
+            if ($ForceRefresh) {
+                Write-Verbose "ForceRefresh set: bypassing cache for query '$query'"
+                $cached = $null
+            }
+            else {
+                $cached = Get-CachedArtistResult -Query $query -Locale $Locale -CacheMinutes $CacheMinutes
+            }
             if ($cached) {
                 $candidates = $cached
             }
