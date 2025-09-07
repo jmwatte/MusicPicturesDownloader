@@ -104,7 +104,7 @@ function Select-QArtistResults {
             if ($combined -gt 1) { $combined = 1 }
 
             $obj = [PSCustomObject]@{
-                Candidate = $c
+                Candidate = $c.Name
                 MatchScore = [math]::Round($combined, 3)
                 Debug = [PSCustomObject]@{
                     TokenScore = [math]::Round($tokenScore,3)

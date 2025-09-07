@@ -109,7 +109,7 @@ function Invoke-QCheckArtist {
             else {
                 # fetch html and parse
                 $html = Get-QArtistSearchHtml -Query $query -Locale $Locale -ThrottleSeconds $ThrottleSeconds
-                $candidates = ConvertFrom-QArtistSearchResults -HtmlContent $html -MaxCandidates 10
+                $candidates = ConvertFrom-QTrackSearchResults -Html $html -MaxCandidates 10
                 # attach search url for logging
                 $searchUrl = Build-QArtistSearchUrl -Query $query -Locale $Locale
                 $candidates | ForEach-Object { $_ | Add-Member -NotePropertyName SearchUrl -NotePropertyValue $searchUrl -Force }
@@ -139,6 +139,25 @@ function Invoke-QCheckArtist {
 
             # Log suggestion
             Write-QCheckLog -Record $suggest -LogPath $LogPath
+
+            # Auto-apply high-confidence artist when requested and safe
+            if ($Mode -eq 'Automatic' -and $top -and ($top.MatchScore -eq 1.0)) {
+                foreach ($f in $suggest.Files) {
+                    if ($DryRun) {
+                        Write-Verbose "DryRun: would set artist='{0}' on '{1}'" -f $top.Artist, $f
+                    }
+                    else {
+                        Write-Verbose "Applying artist='{0}' on '{1}'" -f $top.Artist, $f
+                        try {
+                            $res = Set-FileArtistWithFFmpeg -AudioFilePath $f -Artist $top.Artist -ErrorAction Stop
+                            Write-Information "Updated artist for $f (OldArtist=$($res.OldArtist))"
+                        }
+                        catch {
+                            Write-Warning "Failed to apply artist on $f: $_"
+                        }
+                    }
+                }
+            }
 
             # Mode handling (for now we only return suggestions; not applying tags)
             $results += $suggest

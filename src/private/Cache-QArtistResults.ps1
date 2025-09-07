@@ -29,7 +29,7 @@ function Get-CachedArtistResult {
 
     process {
     $base = Join-Path -Path $env:TEMP -ChildPath 'MusicPicturesDownloader\cache\artists'
-    if (-not (Test-Path -LiteralPath $base)) { New-Item -LiteralPath $base -ItemType Directory -Force | Out-Null }
+    if (-not (Test-Path -LiteralPath $base)) { New-Item -Path $base -ItemType Directory -Force | Out-Null }
         $keySource = "$Locale`|$Query"
         $sha = [System.BitConverter]::ToString((New-Object Security.Cryptography.SHA1Managed).ComputeHash([System.Text.Encoding]::UTF8.GetBytes($keySource))).Replace('-','').ToLowerInvariant()
         $file = Join-Path -Path $base -ChildPath "$sha.json"

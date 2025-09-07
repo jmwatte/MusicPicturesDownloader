@@ -63,7 +63,7 @@ function ConvertFrom-QArtistSearchResults {
                         if ($MaxCandidates -gt 0 -and $results.Count -ge $MaxCandidates) { break }
 
                         # anchor candidate: prefer explicit artist links
-                        $aNode = $li.SelectSingleNode(".//a[contains(@href,'/artist') or contains(@href,'/artists')]")
+                        $aNode = $li.SelectSingleNode(".//a[contains(@href,'/artist') or contains(@href,'/artists')or contains(@href,'/title')]")
                         if (-not $aNode) { $aNode = $li.SelectSingleNode('.//div[1]/a') }
                         if (-not $aNode) { $aNode = $li.SelectSingleNode('.//a') }
                         $href = $null
